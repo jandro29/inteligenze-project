@@ -51,25 +51,32 @@ export default function FAQSection() {
     },
     {
      question: hero?.pregunta2 ?? "Cargando...",
-      answer: hero?.respuesta2 ?? "Cargando...",    },
+      answer: hero?.respuesta2 ?? "Cargando...",    
+    },
     {
       question: hero?.pregunta3 ?? "Cargando...",
-      answer: hero?.respuesta3 ?? "Cargando...",    },
+      answer: hero?.respuesta3 ?? "Cargando...",    
+    },
     {
      question: hero?.pregunta4 ?? "Cargando...",
-      answer: hero?.respuesta4 ?? "Cargando...",    },
+      answer: hero?.respuesta4 ?? "Cargando...",    
+    },
     {
       question: hero?.pregunta5 ?? "Cargando...",
-      answer: hero?.respuesta5 ?? "Cargando...",    },
+      answer: hero?.respuesta5 ?? "Cargando...",    
+    },
     {
       question: hero?.pregunta6 ?? "Cargando...",
-      answer: hero?.respuesta6 ?? "Cargando...",    },
+      answer: hero?.respuesta6 ?? "Cargando...",    
+    },
     {
       question: hero?.pregunta7 ?? "Cargando...",
-      answer: hero?.respuesta7 ?? "Cargando...",    },
+      answer: hero?.respuesta7 ?? "Cargando...",    
+    },
     {
       question: hero?.pregunta8 ?? "Cargando...",
-      answer: hero?.respuesta8 ?? "Cargando...",    },
+      answer: hero?.respuesta8 ?? "Cargando...",    
+    },
   ];
 
   const toggleItem = (index: number) => {
