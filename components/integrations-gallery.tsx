@@ -4,9 +4,32 @@ import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, ExternalLink } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+
+interface Hero{
+  titulo: string;
+  subtitulo: string;
+  primerotituloblanco: string;
+  segundotituloceleste: string;
+  contenido: string;
+}
+
 
 export default function IntegrationsGallery() {
+  
+
+  const [hero, setHero] = useState<Hero | null>(null);
+  
+    useEffect(() => {
+      fetch("http://35.238.156.185:1337/api/sevensection", { cache: "no-store" })
+        .then((res) => res.json())
+        .then((json) => {
+          console.log(" JSON recibido:", json);
+          setHero(json.data);
+        })
+        .catch((err) => console.error(err));
+    }, []);
+    
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
 
   const topIntegrations = [
@@ -154,9 +177,9 @@ export default function IntegrationsGallery() {
           <div className="inline-block rounded-lg bg-blue-500/10 border border-blue-500/20 px-3 py-1 text-sm text-blue-400 mb-4">
             Hub de Integraciones
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">Conecta Todo</h2>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">{hero?.titulo ?? "Cargando..."}</h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Integra perfectamente con tus herramientas favoritas y proveedores de IA
+            {hero?.subtitulo ?? "Cargando..."}
           </p>
         </motion.div>
 
@@ -172,13 +195,12 @@ export default function IntegrationsGallery() {
             <div>
               <div className="text-blue-400 text-sm font-medium mb-2">Popular en Empresas</div>
               <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 leading-tight">
-                200+ Integraciones
+                {hero?.primerotituloblanco ?? "Cargando..."}
                 <br />
-                <span className="text-blue-400">Listas para Usar</span>
+                <span className="text-blue-400">{hero?.segundotituloceleste ?? "Cargando..."}</span>
               </h3>
               <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                Conecta tu plataforma IA con las herramientas que tu equipo ya usa. Desde plataformas de comunicación
-                hasta suites de productividad, te tenemos cubierto.
+                {hero?.contenido ?? "Cargando..."}
               </p>
             </div>
 

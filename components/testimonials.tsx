@@ -1,27 +1,52 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { useEffect, useState } from "react";
 
-export default function Testimonials() {
+
+
+interface Hero {
+  titulo: string;
+  subtitulo: string;
+  primercomentariobox : string;
+  primercomentariopersonabox : string;
+  puestoprimercomentariobox : string;
+  segundocomentariobox: string;
+  segundocomentariopersonabox : string;
+  puestosegundocomentariobox : string;
+  tercercomentariobox : string;
+  tercercomentariopersonabox : string;
+  puestotercercomentariobox : string;
+}
+
+
+export default async function Testimonials() {
+ const res = await fetch("http://35.238.156.185:1337/api/fivesection", {
+    cache: "no-store",
+  });
+
+
+  const json = await res.json();
+
+  const hero: Hero | undefined = json.data;
+
+
   const testimonials = [
     {
-      quote:
-        "Esta plataforma IA ha transformado cómo nuestra organización maneja la gestión del conocimiento y soporte al cliente. Las características de seguridad nos dan tranquilidad al manejar datos sensibles.",
-      name: "Sarah Chen",
-      title: "CTO, Servicios Financieros Globales",
+      quote:hero?.primercomentariobox ?? "Cargando...",
+      name: hero?.primercomentariopersonabox ?? "Cargando...",
+      title: hero?.puestoprimercomentariobox ?? "Cargando...",
       avatar: "SC",
     },
     {
-      quote:
-        "La capacidad de personalizar agentes e integrar con nuestros sistemas existentes ha hecho esta plataforma invaluable para nuestras operaciones gubernamentales. El ROI ha sido sustancial.",
-      name: "Michael Johnson",
-      title: "Director de TI, Agencia Gubernamental",
+      quote:hero?.segundocomentariobox ?? "Cargando...",
+      name: hero?.segundocomentariopersonabox ?? "Cargando...",
+      title: hero?.puestosegundocomentariobox ?? "Cargando...",
       avatar: "MJ",
     },
     {
-      quote:
-        "Hemos visto un aumento del 40% en productividad desde implementar esta solución. La integración de base de conocimientos y plantillas de prompts personalizadas han sido revolucionarias.",
-      name: "David Rodriguez",
-      title: "Jefe de Innovación, Tecnología Empresarial",
+      quote:hero?.tercercomentariobox ?? "Cargando...",
+      name: hero?.tercercomentariopersonabox ?? "Cargando...",
+      title: hero?.puestotercercomentariobox ?? "Cargando...",
       avatar: "DR",
     },
   ]
@@ -35,10 +60,10 @@ export default function Testimonials() {
               Testimonios
             </div>
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              Confiado por Organizaciones Líderes
+              {hero?.titulo ?? "Cargando..."}
             </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-              Ve lo que nuestros clientes empresariales y gubernamentales dicen sobre nuestra plataforma IA.
+              {hero?.subtitulo ?? "Cargando..."}
             </p>
           </div>
         </div>

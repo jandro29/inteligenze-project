@@ -1,59 +1,84 @@
-"use client"
+"use client";
 
-import { motion, AnimatePresence } from "framer-motion"
-import { useState } from "react"
-import { ChevronDown, HelpCircle } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+import { ChevronDown, HelpCircle } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+
+interface Hero {
+  titulo: string;
+  subtitulo: string;
+  pregunta1: string;
+  respuesta1: string;
+  pregunta2: string;
+  respuesta2: string;
+  pregunta3: string;
+  respuesta3: string;
+  pregunta4: string;
+  respuesta4: string;
+  pregunta5: string;
+  respuesta5: string;
+  pregunta6: string;
+  respuesta6: string;
+  pregunta7: string;
+  respuesta7: string;
+  pregunta8: string;
+  respuesta8: string;
+}
 
 export default function FAQSection() {
-  const [openItems, setOpenItems] = useState<number[]>([0]) // Primer elemento abierto por defecto
+
+
+  const [hero, setHero] = useState<Hero | null>(null);
+  
+    useEffect(() => {
+      fetch("http://35.238.156.185:1337/api/eightsection", { cache: "no-store" })
+        .then((res) => res.json())
+        .then((json) => {
+          console.log(" JSON recibido:", json);
+          setHero(json.data);
+        })
+        .catch((err) => console.error(err));
+    }, []);
+
+
+  const [openItems, setOpenItems] = useState<number[]>([0]); // Primer elemento abierto por defecto
 
   const faqs = [
     {
-      question: "¿Qué tan segura es su plataforma IA para uso empresarial?",
-      answer:
-        "Nuestra plataforma emplea cifrado de nivel bancario, cumplimiento SOC 2 Tipo II y sigue protocolos estrictos de gobernanza de datos. Todos los datos están cifrados en tránsito y en reposo, con controles de acceso basados en roles y registros de auditoría integrales. Soportamos implementación local y opciones de nube privada para máximo control de seguridad.",
+      question: hero?.pregunta1 ?? "Cargando...",
+      answer: hero?.respuesta1 ?? "Cargando...",
     },
     {
-      question: "¿Qué tipos de integraciones soportan?",
-      answer:
-        "Soportamos más de 200+ integraciones incluyendo sistemas ERP principales (SAP, Oracle), plataformas CRM (Salesforce, HubSpot), herramientas de colaboración (Microsoft 365, Slack) y APIs personalizadas. Nuestro marco de integración soporta APIs REST, webhooks y sincronización de datos en tiempo real con la mayoría de sistemas empresariales.",
-    },
+     question: hero?.pregunta2 ?? "Cargando...",
+      answer: hero?.respuesta2 ?? "Cargando...",    },
     {
-      question: "¿Qué tan rápido podemos implementar su solución IA?",
-      answer:
-        "La implementación típicamente toma 2-4 semanas para despliegues estándar. Esto incluye configuración inicial, integración de datos, entrenamiento de usuarios y soporte de puesta en marcha. Para entornos empresariales complejos, proporcionamos especialistas de implementación dedicados y podemos acomodar cronogramas personalizados basados en tus requisitos específicos.",
-    },
+      question: hero?.pregunta3 ?? "Cargando...",
+      answer: hero?.respuesta3 ?? "Cargando...",    },
     {
-      question: "¿Qué tipo de soporte y entrenamiento proporcionan?",
-      answer:
-        "Ofrecemos soporte técnico integral 24/7, gerentes de éxito del cliente dedicados para clientes empresariales, documentación extensa, tutoriales en video y sesiones de entrenamiento en vivo. Nuestro soporte incluye asistencia de incorporación, orientación de mejores prácticas y recomendaciones de optimización continua.",
-    },
+     question: hero?.pregunta4 ?? "Cargando...",
+      answer: hero?.respuesta4 ?? "Cargando...",    },
     {
-      question: "¿Puede la IA ser personalizada para las necesidades específicas de nuestra industria?",
-      answer:
-        "Absolutamente. Nuestra plataforma soporta agentes IA personalizados, plantillas de prompts específicas de la industria y bases de conocimiento especializadas. Trabajamos con clientes para desarrollar soluciones personalizadas para salud, finanzas, legal, gobierno y otras industrias reguladas con requisitos de cumplimiento específicos.",
-    },
+      question: hero?.pregunta5 ?? "Cargando...",
+      answer: hero?.respuesta5 ?? "Cargando...",    },
     {
-      question: "¿Cuáles son sus modelos de precios y términos de contrato?",
-      answer:
-        "Ofrecemos precios flexibles basados en uso, número de usuarios y requisitos de características. Las opciones incluyen suscripciones mensuales, contratos anuales con descuentos y licenciamiento empresarial. Todos los planes incluyen características principales, con niveles premium ofreciendo análisis avanzados, soporte prioritario e integraciones personalizadas.",
-    },
+      question: hero?.pregunta6 ?? "Cargando...",
+      answer: hero?.respuesta6 ?? "Cargando...",    },
     {
-      question: "¿Cómo aseguran la privacidad de datos y cumplimiento?",
-      answer:
-        "Mantenemos estándares estrictos de privacidad de datos con cumplimiento GDPR, HIPAA y SOC 2. Las opciones de residencia de datos están disponibles, y nunca usamos datos de clientes para entrenar nuestros modelos. Nuestra plataforma incluye anonimización de datos, controles de retención y el derecho a eliminación para cumplir requisitos regulatorios.",
-    },
+      question: hero?.pregunta7 ?? "Cargando...",
+      answer: hero?.respuesta7 ?? "Cargando...",    },
     {
-      question: "¿Qué pasa con nuestros datos si decidimos discontinuar el servicio?",
-      answer:
-        "Proporcionamos herramientas integrales de exportación de datos y asistencia de migración de soporte. Mantienes propiedad completa de tus datos, y garantizamos eliminación segura de datos dentro de 30 días de terminación del contrato. También ofrecemos períodos extendidos de retención de datos si es necesario para propósitos de cumplimiento.",
-    },
-  ]
+      question: hero?.pregunta8 ?? "Cargando...",
+      answer: hero?.respuesta8 ?? "Cargando...",    },
+  ];
 
   const toggleItem = (index: number) => {
-    setOpenItems((prev) => (prev.includes(index) ? prev.filter((item) => item !== index) : [...prev, index]))
-  }
+    setOpenItems((prev) =>
+      prev.includes(index)
+        ? prev.filter((item) => item !== index)
+        : [...prev, index]
+    );
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -64,7 +89,7 @@ export default function FAQSection() {
         delayChildren: 0.2,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -76,7 +101,7 @@ export default function FAQSection() {
         ease: "easeOut",
       },
     },
-  }
+  };
 
   return (
     <section className="py-20 bg-gradient-to-b from-background to-muted/30 dark:from-background dark:to-muted/10">
@@ -93,9 +118,12 @@ export default function FAQSection() {
               <HelpCircle className="h-4 w-4" />
               FAQ
             </div>
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Preguntas Frecuentes</h2>
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+              Preguntas Frecuentes
+            </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-              Obtén respuestas a preguntas comunes sobre nuestra plataforma IA empresarial, implementación y soporte.
+              Obtén respuestas a preguntas comunes sobre nuestra plataforma IA
+              empresarial, implementación y soporte.
             </p>
           </div>
         </motion.div>
@@ -118,9 +146,13 @@ export default function FAQSection() {
                 >
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold pr-4 leading-relaxed">{faq.question}</h3>
+                      <h3 className="text-lg font-semibold pr-4 leading-relaxed">
+                        {faq.question}
+                      </h3>
                       <motion.div
-                        animate={{ rotate: openItems.includes(index) ? 180 : 0 }}
+                        animate={{
+                          rotate: openItems.includes(index) ? 180 : 0,
+                        }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
                         className="flex-shrink-0"
                       >
@@ -147,7 +179,9 @@ export default function FAQSection() {
                           transition={{ duration: 0.2, delay: 0.1 }}
                           className="border-t pt-4"
                         >
-                          <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
+                          <p className="text-muted-foreground leading-relaxed">
+                            {faq.answer}
+                          </p>
                         </motion.div>
                       </CardContent>
                     </motion.div>
@@ -175,12 +209,15 @@ export default function FAQSection() {
         >
           <div className="inline-flex items-center gap-2 text-sm text-muted-foreground">
             <span>¿Aún tienes preguntas?</span>
-            <a href="#contact" className="text-primary hover:underline font-medium transition-colors duration-200">
+            <a
+              href="#contact"
+              className="text-primary hover:underline font-medium transition-colors duration-200"
+            >
               Contacta a nuestro equipo de soporte
             </a>
           </div>
         </motion.div>
       </div>
     </section>
-  )
+  );
 }

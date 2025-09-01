@@ -1,16 +1,67 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { Card, CardContent } from "@/components/ui/card"
-import { TrendingUp, CheckCircle, Clock, DollarSign, Zap, Users, Target, BarChart3 } from "lucide-react"
+import { motion } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  TrendingUp,
+  CheckCircle,
+  Clock,
+  DollarSign,
+  Zap,
+  Users,
+  Target,
+  BarChart3,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+
+interface Hero {
+  titulo: string;
+  subtitulo: string;
+  estadisticabox1: string;
+  titulobox1: string;
+  contenidobox1: string;
+  estadisticabox2: string;
+  titulobox2: string;
+  contenidobox2: string;
+  estadisticabox3: string;
+  titulobox3: string;
+  contenidobox3: string;
+  estadisticabox4: string;
+  titulobox4: string;
+  contenidobox4: string;
+  estadisticabox5: string;
+  titulobox5: string;
+  contenidobox5: string;
+  estadisticabox6: string;
+  titulobox6: string;
+  contenidobox6: string;
+  estadisticabox7: string;
+  titulobox7: string;
+  contenidobox7: string;
+  estadisticabox8: string;
+  titulobox8: string;
+  contenidobox8: string;
+}
 
 export default function EfficiencyHighlights() {
+  const [hero, setHero] = useState<Hero | null>(null);
+
+  useEffect(() => {
+    fetch("http://35.238.156.185:1337/api/sixsection", { cache: "no-store" })
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(" JSON recibido:", json);
+        setHero(json.data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
   const metrics = [
     {
       icon: <TrendingUp className="h-8 w-8" />,
-      value: "94%",
-      label: "Tasa de Eficiencia",
-      description: "Mejora promedio de productividad",
+      value: hero?.estadisticabox1 ?? "Cargando...",
+      label: hero?.titulobox1 ?? "Cargando...",
+      description: hero?.contenidobox1 ?? "Cargando...",
       color: "from-emerald-500 to-green-600",
       bgColor: "bg-emerald-50 dark:bg-emerald-950/20",
       iconColor: "text-emerald-600 dark:text-emerald-400",
@@ -19,9 +70,9 @@ export default function EfficiencyHighlights() {
     },
     {
       icon: <CheckCircle className="h-8 w-8" />,
-      value: "98.7%",
-      label: "Finalización de Tareas",
-      description: "Tareas completadas exitosamente",
+      value: hero?.estadisticabox2 ?? "Cargando...",
+      label: hero?.titulobox2 ?? "Cargando...",
+      description: hero?.contenidobox2 ?? "Cargando...",
       color: "from-blue-500 to-indigo-600",
       bgColor: "bg-blue-50 dark:bg-blue-950/20",
       iconColor: "text-blue-600 dark:text-blue-400",
@@ -30,9 +81,9 @@ export default function EfficiencyHighlights() {
     },
     {
       icon: <Clock className="h-8 w-8" />,
-      value: "99.9%",
-      label: "Tiempo de Actividad",
-      description: "Disponibilidad confiable del servicio",
+      value: hero?.estadisticabox3 ?? "Cargando...",
+      label: hero?.titulobox3 ?? "Cargando...",
+      description: hero?.contenidobox3 ?? "Cargando...",
       color: "from-purple-500 to-violet-600",
       bgColor: "bg-purple-50 dark:bg-purple-950/20",
       iconColor: "text-purple-600 dark:text-purple-400",
@@ -41,9 +92,9 @@ export default function EfficiencyHighlights() {
     },
     {
       icon: <DollarSign className="h-8 w-8" />,
-      value: "47%",
-      label: "Reducción de Costos",
-      description: "Ahorros operacionales promedio",
+      value: hero?.estadisticabox4 ?? "Cargando...",
+      label: hero?.titulobox4 ?? "Cargando...",
+      description: hero?.contenidobox4 ?? "Cargando...",
       color: "from-amber-500 to-orange-600",
       bgColor: "bg-amber-50 dark:bg-amber-950/20",
       iconColor: "text-amber-600 dark:text-amber-400",
@@ -52,9 +103,9 @@ export default function EfficiencyHighlights() {
     },
     {
       icon: <Zap className="h-8 w-8" />,
-      value: "3.2s",
-      label: "Tiempo de Respuesta",
-      description: "Velocidad promedio de respuesta IA",
+      value: hero?.estadisticabox5 ?? "Cargando...",
+      label: hero?.titulobox5 ?? "Cargando...",
+      description: hero?.contenidobox5 ?? "Cargando...",
       color: "from-cyan-500 to-teal-600",
       bgColor: "bg-cyan-50 dark:bg-cyan-950/20",
       iconColor: "text-cyan-600 dark:text-cyan-400",
@@ -63,9 +114,9 @@ export default function EfficiencyHighlights() {
     },
     {
       icon: <Users className="h-8 w-8" />,
-      value: "10K+",
-      label: "Usuarios Activos",
-      description: "Organizaciones usando nuestra plataforma",
+      value: hero?.estadisticabox6 ?? "Cargando...",
+      label: hero?.titulobox6 ?? "Cargando...",
+      description: hero?.contenidobox6 ?? "Cargando...",
       color: "from-rose-500 to-pink-600",
       bgColor: "bg-rose-50 dark:bg-rose-950/20",
       iconColor: "text-rose-600 dark:text-rose-400",
@@ -74,9 +125,9 @@ export default function EfficiencyHighlights() {
     },
     {
       icon: <Target className="h-8 w-8" />,
-      value: "92%",
-      label: "Tasa de Precisión",
-      description: "Puntuación de precisión del modelo IA",
+      value: hero?.estadisticabox7 ?? "Cargando...",
+      label: hero?.titulobox7 ?? "Cargando...",
+      description: hero?.contenidobox7 ?? "Cargando...",
       color: "from-violet-500 to-purple-600",
       bgColor: "bg-violet-50 dark:bg-violet-950/20",
       iconColor: "text-violet-600 dark:text-violet-400",
@@ -85,16 +136,16 @@ export default function EfficiencyHighlights() {
     },
     {
       icon: <BarChart3 className="h-8 w-8" />,
-      value: "156%",
-      label: "ROI Promedio",
-      description: "Retorno de la inversión",
+      value: hero?.estadisticabox8 ?? "Cargando...",
+      label: hero?.titulobox8 ?? "Cargando...",
+      description: hero?.contenidobox8 ?? "Cargando...",
       color: "from-green-500 to-emerald-600",
       bgColor: "bg-green-50 dark:bg-green-950/20",
       iconColor: "text-green-600 dark:text-green-400",
       trend: "+23%",
       trendColor: "text-green-600",
     },
-  ]
+  ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -105,7 +156,7 @@ export default function EfficiencyHighlights() {
         delayChildren: 0.2,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -117,7 +168,7 @@ export default function EfficiencyHighlights() {
         ease: "easeOut",
       },
     },
-  }
+  };
 
   return (
     <section className="py-20 bg-gradient-to-b from-background to-muted/30 dark:from-background dark:to-muted/10">
@@ -134,11 +185,10 @@ export default function EfficiencyHighlights() {
               Métricas de Rendimiento
             </div>
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              Resultados Comprobados y Eficiencia
+              {hero?.titulo ?? "Cargando..."}
             </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-              Indicadores de rendimiento en tiempo real mostrando el impacto de nuestra plataforma IA en las
-              organizaciones.
+              {hero?.subtitulo ?? "Cargando..."}
             </p>
           </div>
         </motion.div>
@@ -168,16 +218,24 @@ export default function EfficiencyHighlights() {
                   </div>
 
                   <div className="space-y-2">
-                    <div className="text-3xl font-bold tracking-tight">{metric.value}</div>
-                    <div className="text-lg font-semibold text-foreground">{metric.label}</div>
-                    <div className="text-sm text-muted-foreground">{metric.description}</div>
+                    <div className="text-3xl font-bold tracking-tight">
+                      {metric.value}
+                    </div>
+                    <div className="text-lg font-semibold text-foreground">
+                      {metric.label}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      {metric.description}
+                    </div>
                   </div>
 
                   {/* Gradiente de fondo animado */}
                   <motion.div
                     className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300"
                     style={{
-                      background: `linear-gradient(135deg, ${metric.color.split(" ")[1]} 0%, ${metric.color.split(" ")[3]} 100%)`,
+                      background: `linear-gradient(135deg, ${
+                        metric.color.split(" ")[1]
+                      } 0%, ${metric.color.split(" ")[3]} 100%)`,
                     }}
                     initial={false}
                     whileHover={{ opacity: 0.1 }}
@@ -191,18 +249,18 @@ export default function EfficiencyHighlights() {
                         metric.iconColor.includes("emerald")
                           ? "#10b981"
                           : metric.iconColor.includes("blue")
-                            ? "#3b82f6"
-                            : metric.iconColor.includes("purple")
-                              ? "#8b5cf6"
-                              : metric.iconColor.includes("amber")
-                                ? "#f59e0b"
-                                : metric.iconColor.includes("cyan")
-                                  ? "#06b6d4"
-                                  : metric.iconColor.includes("rose")
-                                    ? "#f43f5e"
-                                    : metric.iconColor.includes("violet")
-                                      ? "#8b5cf6"
-                                      : "#10b981"
+                          ? "#3b82f6"
+                          : metric.iconColor.includes("purple")
+                          ? "#8b5cf6"
+                          : metric.iconColor.includes("amber")
+                          ? "#f59e0b"
+                          : metric.iconColor.includes("cyan")
+                          ? "#06b6d4"
+                          : metric.iconColor.includes("rose")
+                          ? "#f43f5e"
+                          : metric.iconColor.includes("violet")
+                          ? "#8b5cf6"
+                          : "#10b981"
                       }`,
                       scale: 1.02,
                     }}
@@ -224,11 +282,15 @@ export default function EfficiencyHighlights() {
         >
           <div className="space-y-2">
             <div className="text-2xl font-bold text-primary">500+</div>
-            <div className="text-sm text-muted-foreground">Clientes Empresariales</div>
+            <div className="text-sm text-muted-foreground">
+              Clientes Empresariales
+            </div>
           </div>
           <div className="space-y-2">
             <div className="text-2xl font-bold text-primary">24/7</div>
-            <div className="text-sm text-muted-foreground">Soporte Disponible</div>
+            <div className="text-sm text-muted-foreground">
+              Soporte Disponible
+            </div>
           </div>
           <div className="space-y-2">
             <div className="text-2xl font-bold text-primary">99.9%</div>
@@ -236,10 +298,12 @@ export default function EfficiencyHighlights() {
           </div>
           <div className="space-y-2">
             <div className="text-2xl font-bold text-primary">ISO 27001</div>
-            <div className="text-sm text-muted-foreground">Seguridad Certificada</div>
+            <div className="text-sm text-muted-foreground">
+              Seguridad Certificada
+            </div>
           </div>
         </motion.div>
       </div>
     </section>
-  )
+  );
 }

@@ -1,8 +1,14 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import FrostedGlassIcon from "@/components/frosted-glass-icon"
+import { motion } from "framer-motion";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import FrostedGlassIcon from "@/components/frosted-glass-icon";
 import {
   BuildingIcon,
   GovernmentIcon,
@@ -10,55 +16,78 @@ import {
   HealthcareIcon,
   LegalIcon,
   EducationIcon,
-} from "@/components/use-case-icons"
+} from "@/components/use-case-icons";
+import { useEffect, useState } from "react";
+
+interface Hero {
+  titulo: string;
+  subtitulo: string;
+  primertitulobox: string;
+  primercontenidobox: string;
+  segundotitulobox: string;
+  segundocontenidobox: string;
+  tercertitulobox: string;
+  tercercontenidobox: string;
+  cuartotitulobox: string;
+  cuartocontenidobox: string;
+  quintotitulobox: string;
+  quintocontenidobox: string;
+  sextotitulobox: string;
+  sextocontenidobox: string;
+}
 
 export default function UseCases() {
+  const [hero, setHero] = useState<Hero | null>(null);
+
+  useEffect(() => {
+    fetch("http://35.238.156.185:1337/api/foursection", { cache: "no-store" })
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(" JSON recibido:", json);
+        setHero(json.data); 
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
   const useCases = [
     {
       icon: <BuildingIcon />,
-      title: "Gestión del Conocimiento Empresarial",
-      description:
-        "Centraliza el conocimiento organizacional y habilita búsqueda y recuperación impulsada por IA en todas tus fuentes de datos.",
+      title: hero?.primertitulobox ?? "Cargando...",
+      description: hero?.primercontenidobox ?? "Esperando contenido...",
       accentColor: "rgba(59, 130, 246, 0.5)",
     },
     {
       icon: <GovernmentIcon />,
-      title: "Operaciones Gubernamentales",
-      description:
-        "Optimiza procesos, mejora servicios ciudadanos y mejora la toma de decisiones con soluciones IA seguras.",
+      title: hero?.segundotitulobox ?? "Cargando...",
+      description: hero?.segundocontenidobox ?? "Esperando contenido...",
       accentColor: "rgba(139, 92, 246, 0.5)",
     },
     {
       icon: <FinanceIcon />,
-      title: "Servicios Financieros",
-      description:
-        "Mejora el cumplimiento, evaluación de riesgos y servicio al cliente con IA que respeta estrictos requisitos de seguridad de datos.",
+      title: hero?.tercertitulobox ?? "Cargando...",
+      description: hero?.tercercontenidobox ?? "Esperando contenido...",
       accentColor: "rgba(245, 158, 11, 0.5)",
     },
     {
       icon: <HealthcareIcon />,
-      title: "Salud",
-      description:
-        "Mejora la atención al paciente y eficiencia operacional mientras mantienes el cumplimiento HIPAA y privacidad de datos.",
+      title: hero?.cuartotitulobox ?? "Cargando...",
+      description: hero?.cuartocontenidobox ?? "Esperando contenido...",
       accentColor: "rgba(239, 68, 68, 0.5)",
     },
     {
       icon: <LegalIcon />,
-      title: "Legal",
-      description:
-        "Acelera la investigación legal, análisis de contratos y preparación de casos con asistencia IA segura y precisa.",
+      title: hero?.quintotitulobox ?? "Cargando...",
+      description: hero?.quintocontenidobox ?? "Esperando contenido...",
       accentColor: "rgba(132, 204, 22, 0.5)",
     },
     {
       icon: <EducationIcon />,
-      title: "Educación",
-      description:
-        "Transforma experiencias de aprendizaje y procesos administrativos con soluciones IA personalizables.",
+      title: hero?.sextotitulobox ?? "Cargando...",
+      description: hero?.sextocontenidobox ?? "Esperando contenido...",
       accentColor: "rgba(14, 165, 233, 0.5)",
     },
-  ]
+  ];
 
-  // Variantes de animación para contenedor
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -68,9 +97,8 @@ export default function UseCases() {
         delayChildren: 0.2,
       },
     },
-  }
+  };
 
-  // Variantes de animación para elementos individuales
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -81,7 +109,7 @@ export default function UseCases() {
         ease: "easeOut",
       },
     },
-  }
+  };
 
   return (
     <section className="py-20 bg-gradient-to-b from-background to-muted/30 dark:from-background dark:to-muted/10">
@@ -97,9 +125,11 @@ export default function UseCases() {
             <div className="inline-block rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground mb-2">
               Casos de Uso
             </div>
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Transformando Industrias</h2>
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+              {hero?.titulo ?? "Cargando..."}
+            </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-              Nuestra plataforma IA está diseñada para enfrentar los desafíos únicos de varios sectores.
+              {hero?.subtitulo ?? "Esperando subtítulo..."}
             </p>
           </div>
         </motion.div>
@@ -115,11 +145,17 @@ export default function UseCases() {
             <motion.div key={index} variants={itemVariants}>
               <Card className="h-full bg-background/60 backdrop-blur-sm border transition-all duration-300 hover:shadow-lg dark:bg-background/80">
                 <CardHeader className="pb-2">
-                  <FrostedGlassIcon icon={useCase.icon} color={useCase.accentColor} className="mb-4" />
+                  <FrostedGlassIcon
+                    icon={useCase.icon}
+                    color={useCase.accentColor}
+                    className="mb-4"
+                  />
                   <CardTitle>{useCase.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="text-base">{useCase.description}</CardDescription>
+                  <CardDescription className="text-base">
+                    {useCase.description}
+                  </CardDescription>
                 </CardContent>
               </Card>
             </motion.div>
@@ -127,5 +163,5 @@ export default function UseCases() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }

@@ -10,59 +10,69 @@ import {
   ZapIcon,
 } from "@/components/feature-icons"
 
-export default function FeaturesSection() {
+interface Hero {
+  primertitulo: string;
+  segundosubtitulo: string;
+}
+
+export default async function FeaturesSection() {
+
+   const res = await fetch("http://35.238.156.185:1337/api/secondsection", {
+    cache: "no-store",
+  });
+
+
+  const json = await res.json();
+
+  const hero: Hero | undefined = json.data;
+
   const features = [
     {
       icon: <BotIcon />,
-      title: "Conversaciones LLM Avanzadas",
-      description:
-        "Cambia entre diferentes modelos de lenguaje para encontrar el ajuste perfecto para tu caso de uso específico con análisis de rendimiento integrado.",
+      title: json.data?.tituloprimercuadro,
+      description:json.data?.contenidoprimercuadro,
       accentColor: "rgba(36, 101, 237, 0.5)",
     },
     {
       icon: <SparklesIcon />,
-      title: "Agentes Personalizables",
-      description:
-        "Usa nuestros agentes integrados o crea los tuyos propios para automatizar flujos de trabajo y tareas complejas.",
+      title: json.data?.titulosegundocuadro,
+      description:json.data?.contenidosegundocuadro,
       accentColor: "rgba(236, 72, 153, 0.5)",
     },
     {
       icon: <DatabaseIcon />,
-      title: "Base de Conocimientos Empresarial",
-      description: "Gestión segura del conocimiento con controles de acceso granulares y seguimiento de referencias.",
+      title: json.data?.titulotercercuadro,
+      description: json.data?.contenidotercercuadro,
       accentColor: "rgba(34, 211, 238, 0.5)",
     },
     {
       icon: <ShieldIcon />,
-      title: "Seguridad Empresarial",
-      description: "Cifrado de nivel bancario, controles de cumplimiento y opciones de soberanía de datos.",
+      title: json.data?.titulocuartocuadro,
+      description: json.data?.contenidocuartocuadro,
       accentColor: "rgba(132, 204, 22, 0.5)",
     },
     {
       icon: <FileTextIcon />,
-      title: "Plantillas de Prompts",
-      description:
-        "Accede a nuestra extensa biblioteca de plantillas de prompts o crea personalizadas para tu organización.",
+      title: json.data?.tituloquintocuadro,
+      description:json.data?.contenidoquintocuadro,
       accentColor: "rgba(249, 115, 22, 0.5)",
     },
     {
       icon: <ServerIcon />,
-      title: "Soporte para Servidores MCP",
-      description: "Configura tus propios servidores MCP para un rendimiento y control mejorados.",
+      title: json.data?.titulosextocuadro,
+      description: json.data?.contenidosextocuadro,
       accentColor: "rgba(168, 85, 247, 0.5)",
     },
     {
       icon: <LockIcon />,
-      title: "Privacidad de Datos y Cumplimiento",
-      description:
-        "Cumple con los requisitos regulatorios con características de cumplimiento integrales incluyendo GDPR, HIPAA y SOC 2.",
+      title: json.data?.tituloseptimocuadro,
+      description:json.data?.contenidoseptimocuadro,
       accentColor: "rgba(251, 191, 36, 0.5)",
     },
     {
       icon: <ZapIcon />,
-      title: "Colaboración en Tiempo Real",
-      description:
-        "Permite que los equipos trabajen juntos sin problemas con espacios de trabajo compartidos y sesiones colaborativas de IA.",
+      title: json.data?.titulooctavocuadro,
+      description:json.data?.contenidooctavocuadro,
       accentColor: "rgba(16, 185, 129, 0.5)",
     },
   ]
@@ -76,10 +86,10 @@ export default function FeaturesSection() {
               Características Clave
             </div>
             <h2 id="features-heading" className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              Plataforma IA de Nivel Empresarial
+               {hero?.primertitulo ?? "No hay subtítulo"}
             </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-              Diseñada específicamente para organizaciones que demandan seguridad, personalización y control.
+              {hero?.segundosubtitulo ?? "No hay subtítulo"}
             </p>
           </div>
         </div>
