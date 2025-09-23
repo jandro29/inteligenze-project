@@ -1,34 +1,57 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, Zap } from "lucide-react"
-import { ThemeToggle } from "@/components/theme-toggle"
+import { useState } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Menu, Zap } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { useTheme } from "next-themes";
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
     { label: "Características", href: "#features" },
     { label: "Casos de Uso", href: "#use-cases" },
-    { label: "Testimonios", href: "#testimonials" },
     { label: "Contacto", href: "#contact" },
-  ]
+  ];
+
+  const { theme } = useTheme();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
-          <Link href="/" className="flex items-center space-x-2" aria-label="Página Principal IA Empresarial">
-            <span className="text-2xl font-bold">IA Empresarial</span>
+          <Link
+            href="/"
+            className="flex items-center space-x-2"
+            aria-label="Página Principal IA Empresarial"
+          >
+            {typeof window !== "undefined" &&
+              (theme === "dark" ? (
+                <img
+                  className="w-[150px]"
+                  src="/Logo-dark.png"
+                  alt="Logo White"
+                />
+              ) : (
+                <img
+                  className="w-[150px]"
+                  src="/logo-white.png"
+                  alt="Logo Dark"
+                />
+              ))}
           </Link>
         </div>
 
         <nav className="hidden md:flex gap-6" aria-label="Navegación Principal">
           {navItems.map((item, index) => (
-            <Link key={index} href={item.href} className="text-sm font-medium transition-colors hover:text-primary">
+            <Link
+              key={index}
+              href={item.href}
+              className="text-sm font-medium transition-colors hover:text-primary"
+            >
               {item.label}
             </Link>
           ))}
@@ -44,8 +67,7 @@ export default function Navbar() {
             <Link href="#contact">
               <Zap className="h-4 w-4 text-white" />
               <div className="flex flex-col items-start">
-                <span className="text-sm font-medium">Solicitar Demo</span>
-                <span className="text-xs text-gray-400 dark:text-gray-300 -mt-0.5">v1.0.0</span>
+                <span className="text-sm font-medium">Contactanos</span>
               </div>
             </Link>
           </Button>
@@ -58,7 +80,10 @@ export default function Navbar() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right">
-              <nav className="flex flex-col gap-4 mt-8" aria-label="Navegación Móvil">
+              <nav
+                className="flex flex-col gap-4 mt-8"
+                aria-label="Navegación Móvil"
+              >
                 {navItems.map((item, index) => (
                   <Link
                     key={index}
@@ -78,8 +103,7 @@ export default function Navbar() {
                     <Link href="#contact" onClick={() => setIsOpen(false)}>
                       <Zap className="h-4 w-4 text-white" />
                       <div className="flex flex-col items-start">
-                        <span className="text-sm font-medium">Solicitar Demo</span>
-                        <span className="text-xs text-gray-400 dark:text-gray-300 -mt-0.5">v1.0.0</span>
+                        <span className="text-sm font-medium">Contactanos</span>
                       </div>
                     </Link>
                   </Button>
@@ -90,5 +114,5 @@ export default function Navbar() {
         </div>
       </div>
     </header>
-  )
+  );
 }
