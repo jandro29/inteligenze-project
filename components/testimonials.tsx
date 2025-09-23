@@ -2,7 +2,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { useEffect, useState } from "react";
 
-
+export const dynamic = 'force-dynamic'
 
 interface Hero {
   titulo: string;

@@ -26,6 +26,10 @@ interface Hero {
   respuesta8: string;
 }
 
+
+export const dynamic = 'force-dynamic'
+
+
 export default function FAQSection() {
 
 

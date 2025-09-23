@@ -14,6 +14,9 @@ import EfficiencyHighlights from "@/components/efficiency-highlights"
 import IntegrationsGallery from "@/components/integrations-gallery"
 import FAQSection from "@/components/faq-section"
 
+
+export const dynamic = 'force-dynamic'
+
 interface Hero {
   firsttitle: string;
   secondsubtitle: string;

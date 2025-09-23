@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
+export const dynamic = 'force-dynamic'
+
 interface Hero {
   titulo: string;
   subtitulo: string;

@@ -6,6 +6,10 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight, ExternalLink } from "lucide-react"
 import { useEffect, useState } from "react"
 
+
+export const dynamic = 'force-dynamic'
+
+
 interface Hero{
   titulo: string;
   subtitulo: string;
@@ -13,6 +17,8 @@ interface Hero{
   segundotituloceleste: string;
   contenido: string;
 }
+
+
 
 
 export default function IntegrationsGallery() {
