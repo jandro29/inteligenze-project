@@ -17,6 +17,8 @@ import FAQSection from "@/components/faq-section"
 
 export const dynamic = 'force-dynamic'
 
+export const revalidate = 0
+
 interface Hero {
   firsttitle: string;
   secondsubtitle: string;
