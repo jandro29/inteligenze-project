@@ -27,64 +27,82 @@ interface Hero {
   respuesta8: string;
 }
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default function FAQSection() {
   const [hero, setHero] = useState<Hero | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [openItems, setOpenItems] = useState<number[]>([0]);
-
+  
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        console.log('🔄 Conectando via API Route...');
-        
-        // ✅ SOLO API ROUTE - sin fallbacks estáticos
-        const response = await fetch("/api/faq", {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        console.log('📡 API Route status:', response.status);
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || `Error: ${response.status}`);
+    // Usa variable de entorno para la URL
+    const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "http://34.170.207.129:1337";
+    
+    setLoading(true);
+    setError(null);
+    
+    fetch(`${apiUrl}/api/septimo-contenedor`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      cache: 'no-store',
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
         }
-
-        const json = await response.json();
-        console.log("✅ Datos recibidos via API Route:", json);
-        
-        if (json.data && json.data.attributes) {
-          setHero(json.data.attributes);
-        } else {
-          throw new Error("Estructura de datos inválida desde Strapi");
-        }
-      } catch (err) {
-        console.error("❌ Error fetching:", err);
-        setError(err instanceof Error ? err.message : "Error desconocido");
-        setHero(null);
-      } finally {
+        return res.json();
+      })
+      .then((json) => {
+        console.log("JSON recibido:", json);
+        setHero(json.data);
         setLoading(false);
-      }
-    };
-
-    fetchData();
+      })
+      .catch((err) => {
+        console.error("Error fetching data:", err);
+        setError(err.message);
+        setLoading(false);
+      });
   }, []);
 
-  const faqs = hero ? [
-    { question: hero.pregunta1, answer: hero.respuesta1 },
-    { question: hero.pregunta2, answer: hero.respuesta2 },
-    { question: hero.pregunta3, answer: hero.respuesta3 },
-    { question: hero.pregunta4, answer: hero.respuesta4 },
-    { question: hero.pregunta5, answer: hero.respuesta5 },
-    { question: hero.pregunta6, answer: hero.respuesta6 },
-    { question: hero.pregunta7, answer: hero.respuesta7 },
-    { question: hero.pregunta8, answer: hero.respuesta8 },
-  ] : [];
+  const [openItems, setOpenItems] = useState<number[]>([0]);
+
+  const faqs = [
+    {
+      question: hero?.pregunta1 ?? "¿Pregunta no disponible?",
+      answer: hero?.respuesta1 ?? "Respuesta no disponible.",
+    },
+    {
+      question: hero?.pregunta2 ?? "¿Pregunta no disponible?",
+      answer: hero?.respuesta2 ?? "Respuesta no disponible.",
+    },
+    {
+      question: hero?.pregunta3 ?? "¿Pregunta no disponible?",
+      answer: hero?.respuesta3 ?? "Respuesta no disponible.",
+    },
+    {
+      question: hero?.pregunta4 ?? "¿Pregunta no disponible?",
+      answer: hero?.respuesta4 ?? "Respuesta no disponible.",
+    },
+    {
+      question: hero?.pregunta5 ?? "¿Pregunta no disponible?",
+      answer: hero?.respuesta5 ?? "Respuesta no disponible.",
+    },
+    {
+      question: hero?.pregunta6 ?? "¿Pregunta no disponible?",
+      answer: hero?.respuesta6 ?? "Respuesta no disponible.",
+    },
+    {
+      question: hero?.pregunta7 ?? "¿Pregunta no disponible?",
+      answer: hero?.respuesta7 ?? "Respuesta no disponible.",
+    },
+    {
+      question: hero?.pregunta8 ?? "¿Pregunta no disponible?",
+      answer: hero?.respuesta8 ?? "Respuesta no disponible.",
+    },
+  ];
 
   const toggleItem = (index: number) => {
     setOpenItems((prev) =>
@@ -117,52 +135,14 @@ export default function FAQSection() {
     },
   };
 
-  if (loading) {
-    return (
-      <section className="py-20 bg-gradient-to-b from-background to-muted/30 dark:from-background dark:to-muted/10">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-            <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground mb-2">
-                <HelpCircle className="h-4 w-4" />
-                Cargando desde Strapi...
-              </div>
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                Cargando FAQ
-              </h2>
-              <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-                Obteniendo la información más reciente desde tu panel de administración
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
+  // Mostrar error si hay uno
   if (error) {
     return (
-      <section className="py-20 bg-gradient-to-b from-background to-muted/30 dark:from-background dark:to-muted/10">
+      <section className="py-20 bg-gradient-to-b from-background to-muted/30">
         <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-            <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 rounded-lg bg-destructive px-3 py-1 text-sm text-destructive-foreground mb-2">
-                <HelpCircle className="h-4 w-4" />
-                Error de Conexión
-              </div>
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                No se pudo cargar el contenido
-              </h2>
-              <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-                {error}
-              </p>
-              <button 
-                onClick={() => window.location.reload()}
-                className="mt-4 inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-              >
-                Reintentar
-              </button>
-            </div>
+          <div className="text-center text-red-500">
+            <p>Error al cargar las preguntas frecuentes: {error}</p>
+            <p className="text-sm mt-2">Por favor, intenta recargar la página.</p>
           </div>
         </div>
       </section>
@@ -182,13 +162,13 @@ export default function FAQSection() {
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground mb-2">
               <HelpCircle className="h-4 w-4" />
-              {hero?.FAQ || "Preguntas Frecuentes"}
+              {loading ? "Cargando..." : (hero?.FAQ ?? "FAQ")}
             </div>
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              {hero?.PrimerTitulo || "Preguntas Frecuentes"}
+              {loading ? "Cargando preguntas..." : (hero?.PrimerTitulo ?? "Preguntas Frecuentes")}
             </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-              {hero?.contenido || "Encuentra respuestas a las preguntas más comunes sobre nuestra plataforma"}
+              {loading ? "Obteniendo información..." : (hero?.contenido ?? "Encuentra respuestas a las preguntas más comunes")}
             </p>
           </div>
         </motion.div>
@@ -200,67 +180,68 @@ export default function FAQSection() {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
-          {faqs.length > 0 ? (
-            faqs.map((faq, index) => (
-              <motion.div key={index} variants={itemVariants}>
-                <Card className="overflow-hidden bg-background/60 backdrop-blur-sm border transition-all duration-300 hover:shadow-lg dark:bg-background/80">
-                  <motion.button
-                    className="w-full text-left focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-lg"
-                    onClick={() => toggleItem(index)}
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
-                  >
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-semibold pr-4 leading-relaxed">
-                          {faq.question}
-                        </h3>
-                        <motion.div
-                          animate={{
-                            rotate: openItems.includes(index) ? 180 : 0,
-                          }}
-                          transition={{ duration: 0.3, ease: "easeInOut" }}
-                          className="flex-shrink-0"
-                        >
-                          <ChevronDown className="h-5 w-5 text-muted-foreground" />
-                        </motion.div>
-                      </div>
-                    </CardContent>
-                  </motion.button>
-
-                  <AnimatePresence>
-                    {openItems.includes(index) && (
+          {faqs.map((faq, index) => (
+            <motion.div key={index} variants={itemVariants}>
+              <Card className="overflow-hidden bg-background/60 backdrop-blur-sm border transition-all duration-300 hover:shadow-lg dark:bg-background/80">
+                <motion.button
+                  className="w-full text-left focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-lg"
+                  onClick={() => toggleItem(index)}
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                  disabled={loading}
+                >
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold pr-4 leading-relaxed">
+                        {faq.question}
+                      </h3>
                       <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
+                        animate={{
+                          rotate: openItems.includes(index) ? 180 : 0,
+                        }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="overflow-hidden"
+                        className="flex-shrink-0"
                       >
-                        <CardContent className="px-6 pb-6 pt-0">
-                          <motion.div
-                            initial={{ y: -10, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            exit={{ y: -10, opacity: 0 }}
-                            transition={{ duration: 0.2, delay: 0.1 }}
-                            className="border-t pt-4"
-                          >
-                            <p className="text-muted-foreground leading-relaxed">
-                              {faq.answer}
-                            </p>
-                          </motion.div>
-                        </CardContent>
+                        <ChevronDown className="h-5 w-5 text-muted-foreground" />
                       </motion.div>
-                    )}
-                  </AnimatePresence>
-                </Card>
-              </motion.div>
-            ))
-          ) : (
-            <div className="text-center py-8">
-              <p className="text-muted-foreground">No hay preguntas frecuentes configuradas.</p>
-            </div>
-          )}
+                    </div>
+                  </CardContent>
+                </motion.button>
+
+                <AnimatePresence>
+                  {openItems.includes(index) && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <CardContent className="px-6 pb-6 pt-0">
+                        <motion.div
+                          initial={{ y: -10, opacity: 0 }}
+                          animate={{ y: 0, opacity: 1 }}
+                          exit={{ y: -10, opacity: 0 }}
+                          transition={{ duration: 0.2, delay: 0.1 }}
+                          className="border-t pt-4"
+                        >
+                          <p className="text-muted-foreground leading-relaxed">
+                            {faq.answer}
+                          </p>
+                        </motion.div>
+                      </CardContent>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 pointer-events-none"
+                  whileHover={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                />
+              </Card>
+            </motion.div>
+          ))}
         </motion.div>
 
         <motion.div
