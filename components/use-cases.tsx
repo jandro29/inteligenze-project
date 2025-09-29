@@ -1,5 +1,3 @@
-"use client";
-
 import { motion } from "framer-motion";
 import {
   Card,
@@ -17,7 +15,6 @@ import {
   LegalIcon,
   EducationIcon,
 } from "@/components/use-case-icons";
-import { useEffect, useState } from "react";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -26,41 +23,33 @@ interface Hero {
   titulo1: string;
   PrimerTitulo: string;
   contenido: string;
-  
+
   tituloprimercuadro: string;
   contenidoprimercuadro: string;
-  
+
   titulosegundocuadro: string;
   contenidosegundocuadro: string;
-  
+
   titulotercercuadro: string;
   contenidotercercuadro: string;
-  
+
   titulocuartocuadro: string;
   contenidocuartocuadro: string;
-  
+
   tituloquintocuadro: string;
   contenidoquintocuadro: string;
-  
+
   titulosextocuadro: string;
   contenidosextocuadro: string;
 }
 
-export default function UseCases() {
-  const [hero, setHero] = useState<Hero | null>(null);
+export default async function UseCases() {
+  const res = await fetch("http://34.170.207.129:1337/api/cuarto-contenido", {
+    cache: "no-store",
+  });
 
-  useEffect(() => {
-    fetch("http://34.170.207.129:1337/api/cuarto-contenido?populate=*", {
-      cache: "no-store",
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        console.log("JSON recibido:", json);
-        // 👇 aquí guardamos solo los atributos
-        setHero(json.data?.attributes || null);
-      })
-      .catch((err) => console.error("Error al traer data de Strapi:", err));
-  }, []);
+  const json = await res.json();
+  const hero: Hero | undefined = json.data;
 
   const useCases = [
     {
@@ -78,7 +67,7 @@ export default function UseCases() {
     {
       icon: <FinanceIcon />,
       title: hero?.titulotercercuadro ?? "Cargando...",
-      description: hero?.contenidotercercuadro ?? "Esperando contenido...",
+      description: hero?.contenidotercuadro ?? "Esperando contenido...",
       accentColor: "rgba(245, 158, 11, 0.5)",
     },
     {
@@ -100,29 +89,6 @@ export default function UseCases() {
       accentColor: "rgba(14, 165, 233, 0.5)",
     },
   ];
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut",
-      },
-    },
-  };
 
   return (
     <section className="py-20 bg-gradient-to-b from-background to-muted/30 dark:from-background dark:to-muted/10">
@@ -149,13 +115,12 @@ export default function UseCases() {
 
         <motion.div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
           {useCases.map((useCase, index) => (
-            <motion.div key={index} variants={itemVariants}>
+            <motion.div key={index}>
               <Card className="h-full bg-background/60 backdrop-blur-sm border transition-all duration-300 hover:shadow-lg dark:bg-background/80">
                 <CardHeader className="pb-2">
                   <FrostedGlassIcon
