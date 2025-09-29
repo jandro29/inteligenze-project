@@ -30,60 +30,43 @@ interface Hero {
 export default function FAQSection() {
   const [hero, setHero] = useState<Hero | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [openItems, setOpenItems] = useState<number[]>([0]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        console.log('🔄 Conectando con Strapi via HTTPS...');
+        setError(null);
+        console.log('🔄 Conectando via API Route...');
         
-        // ✅ AHORA CON HTTPS - usa el puerto 443
-        const response = await fetch("http://34.170.207.129/api/septimo-contenedor", {
+        // ✅ SOLO API ROUTE - sin fallbacks estáticos
+        const response = await fetch("/api/faq", {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json',
           },
-          cache: "no-store"
         });
 
-        console.log('📡 Response status:', response.status);
-        console.log('📡 Response ok:', response.ok);
+        console.log('📡 API Route status:', response.status);
 
         if (!response.ok) {
-          throw new Error(`Error HTTP ${response.status}: ${response.statusText}`);
+          const errorData = await response.json();
+          throw new Error(errorData.error || `Error: ${response.status}`);
         }
 
         const json = await response.json();
-        console.log("✅ Datos recibidos de Strapi:", json);
+        console.log("✅ Datos recibidos via API Route:", json);
         
         if (json.data && json.data.attributes) {
           setHero(json.data.attributes);
-        } else if (json.data) {
-          setHero(json.data);
         } else {
-          console.log("❌ Estructura inesperada:", json);
+          throw new Error("Estructura de datos inválida desde Strapi");
         }
       } catch (err) {
-        console.error("❌ Error fetching desde Strapi:", err);
-        
-        // Intento alternativo con HTTP en caso de que HTTPS falle
-        try {
-          console.log('🔄 Intentando con HTTP como fallback...');
-          const fallbackResponse = await fetch("http://34.170.207.129:1337/api/septimo-contenedor", {
-            cache: "no-store"
-          });
-          
-          if (fallbackResponse.ok) {
-            const fallbackJson = await fallbackResponse.json();
-            console.log("✅ Datos recibidos via HTTP fallback:", fallbackJson);
-            if (fallbackJson.data) {
-              setHero(fallbackJson.data);
-            }
-          }
-        } catch (fallbackError) {
-          console.error("❌ Fallback también falló:", fallbackError);
-        }
+        console.error("❌ Error fetching:", err);
+        setError(err instanceof Error ? err.message : "Error desconocido");
+        setHero(null);
       } finally {
         setLoading(false);
       }
@@ -92,42 +75,15 @@ export default function FAQSection() {
     fetchData();
   }, []);
 
-  const [openItems, setOpenItems] = useState<number[]>([0]);
-
-  // Datos de fallback solo si no hay datos de Strapi
   const faqs = hero ? [
-    { 
-      question: hero.pregunta1 || "¿Qué es Inteligence?", 
-      answer: hero.respuesta1 || "Plataforma de IA empresarial para transformar tu organización." 
-    },
-    { 
-      question: hero.pregunta2 || "¿Cómo funciona la integración?", 
-      answer: hero.respuesta2 || "Ofrecemos APIs flexibles y conectores preconstruidos." 
-    },
-    { 
-      question: hero.pregunta3 || "¿Qué seguridad ofrece?", 
-      answer: hero.respuesta3 || "Cifrado de nivel bancario y cumplimiento SOC 2." 
-    },
-    { 
-      question: hero.pregunta4 || "¿Es escalable?", 
-      answer: hero.respuesta4 || "Sí, crece con tu organización sin interrupciones." 
-    },
-    { 
-      question: hero.pregunta5 || "¿Qué soporte incluye?", 
-      answer: hero.respuesta5 || "Soporte técnico 24/7 y capacitación personalizada." 
-    },
-    { 
-      question: hero.pregunta6 || "¿Hay prueba gratuita?", 
-      answer: hero.respuesta6 || "Sí, prueba de 14 días con todas las funciones." 
-    },
-    { 
-      question: hero.pregunta7 || "¿Cómo se factura?", 
-      answer: hero.respuesta7 || "Planes flexibles según uso mensual o anual." 
-    },
-    { 
-      question: hero.pregunta8 || "¿Puedo migrar mis datos?", 
-      answer: hero.respuesta8 || "Sí, nuestro equipo ayuda en la migración completa." 
-    },
+    { question: hero.pregunta1, answer: hero.respuesta1 },
+    { question: hero.pregunta2, answer: hero.respuesta2 },
+    { question: hero.pregunta3, answer: hero.respuesta3 },
+    { question: hero.pregunta4, answer: hero.respuesta4 },
+    { question: hero.pregunta5, answer: hero.respuesta5 },
+    { question: hero.pregunta6, answer: hero.respuesta6 },
+    { question: hero.pregunta7, answer: hero.respuesta7 },
+    { question: hero.pregunta8, answer: hero.respuesta8 },
   ] : [];
 
   const toggleItem = (index: number) => {
@@ -169,14 +125,43 @@ export default function FAQSection() {
             <div className="space-y-2">
               <div className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground mb-2">
                 <HelpCircle className="h-4 w-4" />
-                Conectando con Strapi...
+                Cargando desde Strapi...
               </div>
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                Cargando contenido dinámico
+                Cargando FAQ
               </h2>
               <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-                Los datos se cargarán automáticamente desde tu panel de Strapi
+                Obteniendo la información más reciente desde tu panel de administración
               </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="py-20 bg-gradient-to-b from-background to-muted/30 dark:from-background dark:to-muted/10">
+        <div className="container px-4 md:px-6">
+          <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 rounded-lg bg-destructive px-3 py-1 text-sm text-destructive-foreground mb-2">
+                <HelpCircle className="h-4 w-4" />
+                Error de Conexión
+              </div>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                No se pudo cargar el contenido
+              </h2>
+              <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
+                {error}
+              </p>
+              <button 
+                onClick={() => window.location.reload()}
+                className="mt-4 inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+              >
+                Reintentar
+              </button>
             </div>
           </div>
         </div>
@@ -273,7 +258,7 @@ export default function FAQSection() {
             ))
           ) : (
             <div className="text-center py-8">
-              <p className="text-muted-foreground">No se pudieron cargar las preguntas frecuentes.</p>
+              <p className="text-muted-foreground">No hay preguntas frecuentes configuradas.</p>
             </div>
           )}
         </motion.div>
