@@ -12,14 +12,31 @@ export default async function handler(req, res) {
   try {
     console.log('🌐 Conectando con Strapi...');
     
-    const response = await fetch('http://34.170.207.129:1337/api/septimo-contenedor', {
+    // ✅ VERIFICA ESTA URL - podría necesitar el puerto 1337
+    const strapiUrl = 'http://34.170.207.129:1337/api/septimo-contenedor';
+    console.log('🔗 URL de Strapi:', strapiUrl);
+    
+    const response = await fetch(strapiUrl, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
+    console.log('📡 Status de Strapi:', response.status);
+    console.log('📡 OK:', response.ok);
+
+    // Verifica si la respuesta es HTML en lugar de JSON
+    const contentType = response.headers.get('content-type');
+    console.log('📄 Content-Type:', contentType);
+
+    if (!contentType || !contentType.includes('application/json')) {
+      throw new Error('Strapi devolvió HTML en lugar de JSON. Verifica la URL.');
+    }
+
     if (!response.ok) {
+      const text = await response.text();
+      console.error('❌ Respuesta de error:', text);
       throw new Error(`Strapi response: ${response.status} ${response.statusText}`);
     }
 
@@ -30,10 +47,10 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('❌ Error en API Route:', error.message);
     
-    // ❌ SIN DATOS ESTÁTICOS - solo retorna error
     res.status(500).json({ 
       error: 'No se pudo conectar con Strapi',
-      details: error.message 
+      details: error.message,
+      debug: 'Verifica que Strapi esté corriendo en http://34.170.207.129:1337'
     });
   }
 }
