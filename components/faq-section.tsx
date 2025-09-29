@@ -36,11 +36,10 @@ export default function FAQSection() {
   const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
-    // Usa variable de entorno para la URL
-    const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "http://34.170.207.129:1337";
-    const fullUrl = `${apiUrl}/api/septimo-contenedor`;
+    // Usa el proxy de Next.js para evitar problemas de mixed content
+    const fullUrl = `/api/strapi-proxy?endpoint=/api/septimo-contenedor`;
     
-    console.log("🔍 Intentando cargar desde:", fullUrl);
+    console.log("🔍 Intentando cargar desde proxy:", fullUrl);
     console.log("🌍 Environment:", process.env.NODE_ENV);
     
     setLoading(true);
@@ -52,7 +51,6 @@ export default function FAQSection() {
         'Content-Type': 'application/json',
       },
       cache: 'no-store',
-      mode: 'cors',
     })
       .then((res) => {
         console.log("📡 Respuesta recibida:", res.status, res.statusText);
