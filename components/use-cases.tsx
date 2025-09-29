@@ -19,34 +19,31 @@ import {
 } from "@/components/use-case-icons";
 import { useEffect, useState } from "react";
 
-export const dynamic = 'force-dynamic'
-
-export const revalidate = 0
-
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 interface Hero {
   titulo1: string;
   PrimerTitulo: string;
   contenido: string;
-  image1:ImageBitmap;
-  tituloprimercuadro:string;
-  contenidoprimercuadro:string;
-  image2:ImageBitmap;
-  titulosegundocuadro:string;
-  contenidosegundocuadro:string;
-  image3:ImageBitmap;
-  titulotercercuadro:string;
-  contenidotercercuadro:string;
-  image4:ImageBitmap;
-  titulocuartocuadro:string;
-  contenidocuartocuadro:string;
-  image5:ImageBitmap;
-  tituloquintocuadro:string;
-  contenidoquintocuadro:string;
-  image6:ImageBitmap;
-  titulosextocuadro:string;
-  contenidosextocuadro:string;
- 
+  image1: ImageBitmap;
+  tituloprimercuadro: string;
+  contenidoprimercuadro: string;
+  image2: ImageBitmap;
+  titulosegundocuadro: string;
+  contenidosegundocuadro: string;
+  image3: ImageBitmap;
+  titulotercercuadro: string;
+  contenidotercercuadro: string;
+  image4: ImageBitmap;
+  titulocuartocuadro: string;
+  contenidocuartocuadro: string;
+  image5: ImageBitmap;
+  tituloquintocuadro: string;
+  contenidoquintocuadro: string;
+  image6: ImageBitmap;
+  titulosextocuadro: string;
+  contenidosextocuadro: string;
 }
 
 export default function UseCases() {
@@ -56,10 +53,18 @@ export default function UseCases() {
     fetch("http://34.170.207.129:1337/api/cuarto-contenido", { cache: "no-store" })
       .then((res) => res.json())
       .then((json) => {
-        console.log(" JSON recibido:", json);
-        setHero(json.data); 
+        console.log("JSON recibido:", json);
+
+        // ✅ Detectar si es single type o collection
+        if (json.data) {
+          if (Array.isArray(json.data) && json.data.length > 0) {
+            setHero(json.data[0].attributes); // collection
+          } else if (json.data.attributes) {
+            setHero(json.data.attributes); // single type
+          }
+        }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error("Error al obtener datos de Strapi:", err));
   }, []);
 
   const useCases = [
