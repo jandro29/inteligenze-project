@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "framer-motion";
 import {
   Card,
@@ -15,6 +17,7 @@ import {
   LegalIcon,
   EducationIcon,
 } from "@/components/use-case-icons";
+import { useEffect, useState } from "react";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -23,69 +26,81 @@ interface Hero {
   titulo1: string;
   PrimerTitulo: string;
   contenido: string;
-
   tituloprimercuadro: string;
   contenidoprimercuadro: string;
-
   titulosegundocuadro: string;
   contenidosegundocuadro: string;
-
   titulotercercuadro: string;
   contenidotercercuadro: string;
-
   titulocuartocuadro: string;
   contenidocuartocuadro: string;
-
   tituloquintocuadro: string;
   contenidoquintocuadro: string;
-
   titulosextocuadro: string;
   contenidosextocuadro: string;
 }
 
-export default async function UseCases() {
-  const res = await fetch("http://34.170.207.129:1337/api/cuarto-contenido", {
-    cache: "no-store",
-  });
+export default function UseCases() {
+  const [hero, setHero] = useState<Hero | null>(null);
 
-  const json = await res.json();
-  const hero: Hero | undefined = json.data;
+  useEffect(() => {
+    fetch("http://34.170.207.129:1337/api/cuarto-contenido", {
+      cache: "no-store",
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        console.log("JSON recibido:", json);
+        // 👇 importante: acceder a data.attributes en Strapi
+        if (json?.data?.attributes) {
+          setHero(json.data.attributes);
+        } else if (Array.isArray(json?.data) && json.data[0]?.attributes) {
+          setHero(json.data[0].attributes); // si fuera colección
+        } else {
+          setHero(null);
+        }
+      })
+      .catch((err) => console.error("Error al traer data de Strapi:", err));
+  }, []);
+
+  if (!hero) {
+    return <p className="text-center py-20">Cargando contenido...</p>;
+  }
 
   const useCases = [
     {
       icon: <BuildingIcon />,
-      title: hero?.tituloprimercuadro ?? "Cargando...",
-      description: hero?.contenidoprimercuadro ?? "Esperando contenido...",
+      title: hero.tituloprimercuadro,
+      description: hero.contenidoprimercuadro,
       accentColor: "rgba(59, 130, 246, 0.5)",
     },
     {
       icon: <GovernmentIcon />,
-      title: hero?.titulosegundocuadro ?? "Cargando...",
-      description: hero?.contenidosegundocuadro ?? "Esperando contenido...",
+      title: hero.titulosegundocuadro,
+      description: hero.contenidosegundocuadro,
       accentColor: "rgba(139, 92, 246, 0.5)",
     },
     {
       icon: <FinanceIcon />,
-      title: hero?.titulotercercuadro ?? "Cargando...",
-      description: hero?.contenidocuartocuadro ?? "Esperando contenido...",
+      title: hero.titulotercercuadro,
+      description: hero.contenidotercercuadro,
       accentColor: "rgba(245, 158, 11, 0.5)",
     },
     {
       icon: <HealthcareIcon />,
-      title: hero?.titulocuartocuadro ?? "Cargando...",
-      description: hero?.contenidocuartocuadro ?? "Esperando contenido...",
+      title: hero.titulocuartocuadro,
+      description: hero.contenidocuartocuadro,
       accentColor: "rgba(239, 68, 68, 0.5)",
     },
     {
       icon: <LegalIcon />,
-      title: hero?.tituloquintocuadro ?? "Cargando...",
-      description: hero?.contenidoquintocuadro ?? "Esperando contenido...",
+      title: hero.tituloquintocuadro,
+      description: hero.contenidoquintocuadro,
       accentColor: "rgba(132, 204, 22, 0.5)",
     },
     {
       icon: <EducationIcon />,
-      title: hero?.titulosextocuadro ?? "Cargando...",
-      description: hero?.contenidosextocuadro ?? "Esperando contenido...",
+      title: hero.titulosextocuadro,
+      description: hero.contenidosextocuadro,
       accentColor: "rgba(14, 165, 233, 0.5)",
     },
   ];
@@ -102,13 +117,13 @@ export default async function UseCases() {
         >
           <div className="space-y-2">
             <div className="inline-block rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground mb-2">
-              {hero?.titulo1 ?? "Cargando..."}
+              {hero.titulo1}
             </div>
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              {hero?.PrimerTitulo ?? "Cargando..."}
+              {hero.PrimerTitulo}
             </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-              {hero?.contenido ?? "Esperando subtítulo..."}
+              {hero.contenido}
             </p>
           </div>
         </motion.div>
