@@ -42,36 +42,60 @@ interface Hero {
 
 export default function UseCases() {
   const [hero, setHero] = useState<Hero | null>(null);
+  const [loading, setLoading] = useState(true); // ✅ estado de carga
+  const [error, setError] = useState<string | null>(null); // ✅ estado de error
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         console.log("🔄 Llamando a Strapi...");
-        const res = await fetch("http://34.170.207.129:1337/api/cuarto-contenido", {
-          cache: "no-store",
-        });
+        const res = await fetch(
+          "http://34.170.207.129:1337/api/cuarto-contenido",
+          {
+            cache: "no-store",
+          }
+        );
 
         if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
 
         const json = await res.json();
         console.log("📦 JSON recibido:", json);
 
-        // ⚡ Acceder correctamente a data.attributes
         if (json?.data?.attributes) {
           setHero(json.data.attributes);
         } else {
-          console.warn("⚠️ Estructura inesperada en la API:", json);
+          throw new Error("⚠️ Estructura inesperada en la API");
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error("❌ Error al traer data de Strapi:", err);
+        setError(err.message || "Error al cargar contenido");
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
   }, []);
 
-  if (!hero) {
+  // ✅ Mostrar estados claros
+  if (loading) {
     return <p className="text-center py-20">⏳ Cargando contenido...</p>;
+  }
+
+  if (error) {
+    return (
+      <p className="text-center py-20 text-red-500">
+        ❌ No se pudo cargar el contenido: {error}
+      </p>
+    );
+  }
+
+  if (!hero) {
+    return (
+      <p className="text-center py-20 text-yellow-500">
+        ⚠️ No se encontró información para mostrar.
+      </p>
+    );
   }
 
   const useCases = [
@@ -90,7 +114,7 @@ export default function UseCases() {
     {
       icon: <FinanceIcon />,
       title: hero.titulotercercuadro,
-      description: hero.contenidotercercuadro,
+      description: hero.contenidocuartocuadro,
       accentColor: "rgba(245, 158, 11, 0.5)",
     },
     {
