@@ -56,8 +56,7 @@ export default function UseCases() {
       .then((res) => res.json())
       .then((json) => {
         console.log("JSON recibido:", json);
-        // 👇 aquí guardamos solo los atributos
-        setHero(json.data?.attributes || null);
+        setHero(json.data || null);
       })
       .catch((err) => console.error("Error al traer data de Strapi:", err));
   }, []);
