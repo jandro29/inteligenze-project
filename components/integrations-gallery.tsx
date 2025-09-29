@@ -6,10 +6,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export const dynamic = "force-dynamic";
-
-export const revalidate = 0;
-
 interface Hero {
   titulo1: string;
   PrimerTitulo: string;
@@ -24,23 +20,64 @@ interface Hero {
   tiempoactivo: string;
 }
 
+// ✅ DATOS DE RESPALDO (los mismos de tu Strapi)
+const fallbackData: Hero = {
+  titulo1: "Hub de Integraciones",
+  PrimerTitulo: "Conecta Todo",
+  contenido: "Integra perfectamente con tus herramientas favoritas y proveedores de IA",
+  primerTextoAzul: "Popular en Empresas",
+  textoBlanco: "200+ Integraciones",
+  segundoTextoAzul: "Listas para Usar",
+  textoInformativo: "Conecta tu plataforma IA con las herramientas que tu equipo ya usa. Desde plataformas de comunicación hasta suites de productividad, te tenemos cubierto.",
+  numeroIntegraciones: "200+",
+  integraciones: "Integraciones",
+  numeroTiempoActivo: "99.9%",
+  tiempoactivo: "Tiempo Activo",
+};
 
 export default function IntegrationsGallery() {
   const [hero, setHero] = useState<Hero | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [usingFallback, setUsingFallback] = useState(false);
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("https://35.238.156.185:1337/api/sexto-contenedor", {
-      cache: "no-store",
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        console.log(" JSON recibido:", json);
-        setHero(json.data);
-      })
-      .catch((err) => console.error(err));
-  }, []);
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        console.log('🔄 Intentando conectar con Strapi...');
+        
+        // ✅ PRIMERO INTENTA CON STRAPI
+        const response = await fetch("http://34.170.207.129:1337/api/sexto-contenedor", { 
+          cache: "no-store",
+        });
 
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+        if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status}`);
+        }
+
+        const json = await response.json();
+        console.log("✅ Datos obtenidos de Strapi:", json);
+        
+        if (json.data) {
+          setHero(json.data);
+          setUsingFallback(false);
+        } else {
+          throw new Error("Estructura de datos inválida");
+        }
+        
+      } catch (error) {
+        console.error("❌ Error con Strapi, usando datos de respaldo:", error);
+        // ✅ SI FALLA STRAPI, USA LOS DATOS ESTÁTICOS
+        setHero(fallbackData);
+        setUsingFallback(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const topIntegrations = [
     {
@@ -166,6 +203,26 @@ export default function IntegrationsGallery() {
     </motion.div>
   );
 
+  if (loading) {
+    return (
+      <section className="py-20 bg-gradient-to-b from-gray-900 via-black to-gray-900 relative overflow-hidden">
+        <div className="container px-4 md:px-6 relative z-10">
+          <div className="text-center mb-16">
+            <div className="inline-block rounded-lg bg-blue-500/10 border border-blue-500/20 px-3 py-1 text-sm text-blue-400 mb-4">
+              Conectando con Strapi...
+            </div>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+              Cargando Integraciones
+            </h2>
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+              Obteniendo la información más reciente desde nuestro servidor
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-20 bg-gradient-to-b from-gray-900 via-black to-gray-900 relative overflow-hidden">
       {/* Patrón de fondo */}
@@ -180,6 +237,7 @@ export default function IntegrationsGallery() {
       </div>
 
       <div className="container px-4 md:px-6 relative z-10">
+
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 20 }}
@@ -188,13 +246,13 @@ export default function IntegrationsGallery() {
           transition={{ duration: 0.6 }}
         >
           <div className="inline-block rounded-lg bg-blue-500/10 border border-blue-500/20 px-3 py-1 text-sm text-blue-400 mb-4">
-            {hero?.titulo1 ?? "Cargando..."}
+            {hero?.titulo1}
           </div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
-            {hero?.PrimerTitulo ?? "Cargando..."}
+            {hero?.PrimerTitulo}
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            {hero?.contenido ?? "Cargando..."}
+            {hero?.contenido}
           </p>
         </motion.div>
 
@@ -209,17 +267,17 @@ export default function IntegrationsGallery() {
           >
             <div>
               <div className="text-blue-400 text-sm font-medium mb-2">
-                {hero?.primerTextoAzul ?? "Cargando..."}
+                {hero?.primerTextoAzul}
               </div>
               <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 leading-tight">
-                {hero?.textoBlanco ?? "Cargando..."}
+                {hero?.textoBlanco}
                 <br />
                 <span className="text-blue-400">
-                  {hero?.segundoTextoAzul ?? "Cargando..."}
+                  {hero?.segundoTextoAzul}
                 </span>
               </h3>
               <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                {hero?.textoInformativo ?? "Cargando..."}
+                {hero?.textoInformativo}
               </p>
             </div>
 
@@ -241,12 +299,12 @@ export default function IntegrationsGallery() {
             {/* Estadísticas */}
             <div className="grid grid-cols-2 gap-4 pt-6 border-t border-white/10">
               <div>
-                <div className="text-2xl font-bold text-white">{hero?.numeroIntegraciones ?? "Cargando..."}</div>
-                <div className="text-xs text-gray-400">{hero?.integraciones ?? "Cargando..."}</div>
+                <div className="text-2xl font-bold text-white">{hero?.numeroIntegraciones}</div>
+                <div className="text-xs text-gray-400">{hero?.integraciones}</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-white">{hero?.numeroTiempoActivo ?? "Cargando..."}</div>
-                <div className="text-xs text-gray-400">{hero?.tiempoactivo ?? "Cargando..."}</div>
+                <div className="text-2xl font-bold text-white">{hero?.numeroTiempoActivo}</div>
+                <div className="text-xs text-gray-400">{hero?.tiempoactivo}</div>
               </div>
             </div>
           </motion.div>
