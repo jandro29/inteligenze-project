@@ -237,6 +237,14 @@ export default function IntegrationsGallery() {
       </div>
 
       <div className="container px-4 md:px-6 relative z-10">
+        {/* Indicador de origen de datos */}
+        {/* {usingFallback && (
+          <div className="mb-4 text-center">
+            <div className="inline-flex items-center gap-2 rounded-lg bg-yellow-500 px-3 py-1 text-sm text-white">
+              <span>⚠️ Modo offline - Mostrando datos por defecto</span>
+            </div>
+          </div>
+        )} */}
 
         <motion.div
           className="text-center mb-16"
