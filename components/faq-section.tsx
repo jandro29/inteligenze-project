@@ -7,82 +7,112 @@ import { Card, CardContent } from "@/components/ui/card";
 
 interface Hero {
   FAQ: string;
-  PrimerTitulo:string;
-  contenido:string;
-  pregunta1:string;
-  respuesta1:string;
-  pregunta2:string;
-  respuesta2:string;
-  pregunta3:string;
-  respuesta3:string;
-  pregunta4:string;
-  respuesta4:string;
-  pregunta5:string;
-  respuesta5:string;
-  pregunta6:string;
-  respuesta6:string;
-  pregunta7:string;
-  respuesta7:string;
-  pregunta8:string;
-  respuesta8:string;
+  PrimerTitulo: string;
+  contenido: string;
+  pregunta1: string;
+  respuesta1: string;
+  pregunta2: string;
+  respuesta2: string;
+  pregunta3: string;
+  respuesta3: string;
+  pregunta4: string;
+  respuesta4: string;
+  pregunta5: string;
+  respuesta5: string;
+  pregunta6: string;
+  respuesta6: string;
+  pregunta7: string;
+  respuesta7: string;
+  pregunta8: string;
+  respuesta8: string;
 }
 
+interface ApiResponse {
+  data: {
+    attributes: Hero;
+  };
+}
 
-export const dynamic = 'force-dynamic'
-
-export const revalidate = 0
-
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default function FAQSection() {
-
-
   const [hero, setHero] = useState<Hero | null>(null);
-  
-    useEffect(() => {
-      fetch("http://34.170.207.129:1337/api/septimo-contenedor", { cache: "no-store" })
-        .then((res) => res.json())
-        .then((json) => {
-          console.log(" JSON recibido:", json);
-          setHero(json.data);
-        })
-        .catch((err) => console.error(err));
-    }, []);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const response = await fetch("http://34.170.207.129:1337/api/septimo-contenedor", {
+          cache: "no-store",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-  const [openItems, setOpenItems] = useState<number[]>([0]); // Primer elemento abierto por defecto
+        if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status}`);
+        }
 
+        const json: ApiResponse = await response.json();
+        console.log("JSON recibido:", json);
+        
+        // Acceder a los atributos correctamente
+        if (json.data && json.data.attributes) {
+          setHero(json.data.attributes);
+        } else {
+          throw new Error("Estructura de datos incorrecta");
+        }
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError(err instanceof Error ? err.message : "Error desconocido");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const [openItems, setOpenItems] = useState<number[]>([0]);
+
+  // Preparar las FAQs con valores por defecto mientras se carga
   const faqs = [
     {
-      question: hero?.pregunta1 ?? "Cargando...",
-      answer: hero?.respuesta1 ?? "Cargando...",
+      question: hero?.pregunta1 || "Cargando pregunta...",
+      answer: hero?.respuesta1 || "Cargando respuesta...",
     },
     {
-     question: hero?.pregunta2 ?? "Cargando...",
-      answer: hero?.respuesta2 ?? "Cargando...",    
+      question: hero?.pregunta2 || "Cargando pregunta...",
+      answer: hero?.respuesta2 || "Cargando respuesta...",
     },
     {
-      question: hero?.pregunta3 ?? "Cargando...",
-      answer: hero?.respuesta3 ?? "Cargando...",    
+      question: hero?.pregunta3 || "Cargando pregunta...",
+      answer: hero?.respuesta3 || "Cargando respuesta...",
     },
     {
-     question: hero?.pregunta4 ?? "Cargando...",
-      answer: hero?.respuesta4 ?? "Cargando...",    
+      question: hero?.pregunta4 || "Cargando pregunta...",
+      answer: hero?.respuesta4 || "Cargando respuesta...",
     },
     {
-      question: hero?.pregunta5 ?? "Cargando...",
-      answer: hero?.respuesta5 ?? "Cargando...",    
+      question: hero?.pregunta5 || "Cargando pregunta...",
+      answer: hero?.respuesta5 || "Cargando respuesta...",
     },
     {
-      question: hero?.pregunta6 ?? "Cargando...",
-      answer: hero?.respuesta6 ?? "Cargando...",    
+      question: hero?.pregunta6 || "Cargando pregunta...",
+      answer: hero?.respuesta6 || "Cargando respuesta...",
     },
     {
-      question: hero?.pregunta7 ?? "Cargando...",
-      answer: hero?.respuesta7 ?? "Cargando...",    
+      question: hero?.pregunta7 || "Cargando pregunta...",
+      answer: hero?.respuesta7 || "Cargando respuesta...",
     },
     {
-      question: hero?.pregunta8 ?? "Cargando...",
-      answer: hero?.respuesta8 ?? "Cargando...",    
+      question: hero?.pregunta8 || "Cargando pregunta...",
+      answer: hero?.respuesta8 || "Cargando respuesta...",
     },
   ];
 
@@ -117,6 +147,50 @@ export default function FAQSection() {
     },
   };
 
+  // Mostrar estado de carga
+  if (loading) {
+    return (
+      <section className="py-20 bg-gradient-to-b from-background to-muted/30 dark:from-background dark:to-muted/10">
+        <div className="container px-4 md:px-6">
+          <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground mb-2">
+                <HelpCircle className="h-4 w-4" />
+                Cargando...
+              </div>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                Cargando preguntas frecuentes...
+              </h2>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Mostrar error
+  if (error) {
+    return (
+      <section className="py-20 bg-gradient-to-b from-background to-muted/30 dark:from-background dark:to-muted/10">
+        <div className="container px-4 md:px-6">
+          <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 rounded-lg bg-destructive px-3 py-1 text-sm text-destructive-foreground mb-2">
+                Error
+              </div>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                Error al cargar las preguntas
+              </h2>
+              <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
+                {error}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-20 bg-gradient-to-b from-background to-muted/30 dark:from-background dark:to-muted/10">
       <div className="container px-4 md:px-6">
@@ -130,13 +204,13 @@ export default function FAQSection() {
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground mb-2">
               <HelpCircle className="h-4 w-4" />
-              {hero?.FAQ ?? "Esperando subtítulo..."}
+              {hero?.FAQ || "Preguntas Frecuentes"}
             </div>
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              {hero?.PrimerTitulo ?? "Esperando subtítulo..."}
+              {hero?.PrimerTitulo || "Preguntas Frecuentes"}
             </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-              {hero?.contenido ?? "Esperando subtítulo..."}
+              {hero?.contenido || "Encuentra respuestas a las preguntas más comunes"}
             </p>
           </div>
         </motion.div>
@@ -201,7 +275,6 @@ export default function FAQSection() {
                   )}
                 </AnimatePresence>
 
-                {/* Efecto sutil de hover */}
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 pointer-events-none"
                   whileHover={{ opacity: 1 }}
@@ -212,7 +285,6 @@ export default function FAQSection() {
           ))}
         </motion.div>
 
-        {/* Sección de contacto de soporte */}
         <motion.div
           className="mt-16 text-center"
           initial={{ opacity: 0, y: 20 }}
