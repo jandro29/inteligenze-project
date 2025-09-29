@@ -33,9 +33,6 @@ interface ApiResponse {
   };
 }
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
 export default function FAQSection() {
   const [hero, setHero] = useState<Hero | null>(null);
   const [loading, setLoading] = useState(true);
@@ -47,11 +44,9 @@ export default function FAQSection() {
         setLoading(true);
         setError(null);
         
-        const response = await fetch("http://34.170.207.129:1337/api/septimo-contenedor", {
+        // Cambia a la ruta local de tu API
+        const response = await fetch("/api/faq", {
           cache: "no-store",
-          headers: {
-            'Content-Type': 'application/json',
-          },
         });
 
         if (!response.ok) {
@@ -61,7 +56,6 @@ export default function FAQSection() {
         const json: ApiResponse = await response.json();
         console.log("JSON recibido:", json);
         
-        // Acceder a los atributos correctamente
         if (json.data && json.data.attributes) {
           setHero(json.data.attributes);
         } else {
@@ -78,9 +72,9 @@ export default function FAQSection() {
     fetchData();
   }, []);
 
+  // ... el resto del componente se mantiene igual
   const [openItems, setOpenItems] = useState<number[]>([0]);
 
-  // Preparar las FAQs con valores por defecto mientras se carga
   const faqs = [
     {
       question: hero?.pregunta1 || "Cargando pregunta...",
