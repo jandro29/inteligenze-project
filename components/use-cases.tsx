@@ -42,8 +42,8 @@ interface Hero {
 
 export default function UseCases() {
   const [hero, setHero] = useState<Hero | null>(null);
-  const [loading, setLoading] = useState(true); // ✅ estado de carga
-  const [error, setError] = useState<string | null>(null); // ✅ estado de error
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,8 +61,9 @@ export default function UseCases() {
         const json = await res.json();
         console.log("📦 JSON recibido:", json);
 
-        if (json?.data?.attributes) {
-          setHero(json.data.attributes);
+        // ✅ Adaptado a tu respuesta real
+        if (json?.data) {
+          setHero(json.data);
         } else {
           throw new Error("⚠️ Estructura inesperada en la API");
         }
@@ -77,7 +78,6 @@ export default function UseCases() {
     fetchData();
   }, []);
 
-  // ✅ Mostrar estados claros
   if (loading) {
     return <p className="text-center py-20">⏳ Cargando contenido...</p>;
   }
@@ -114,7 +114,7 @@ export default function UseCases() {
     {
       icon: <FinanceIcon />,
       title: hero.titulotercercuadro,
-      description: hero.contenidocuartocuadro,
+      description: hero.contenidotercercuadro, // ⚠️ corregido
       accentColor: "rgba(245, 158, 11, 0.5)",
     },
     {
