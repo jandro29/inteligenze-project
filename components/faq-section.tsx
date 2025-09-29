@@ -44,9 +44,11 @@ export default function FAQSection() {
         setLoading(true);
         setError(null);
         
-        // Cambia a la ruta local de tu API
-        const response = await fetch("/api/faq", {
+        const response = await fetch("http://34.170.207.129:1337/api/septimo-contenedor", {
           cache: "no-store",
+          headers: {
+            'Content-Type': 'application/json',
+          },
         });
 
         if (!response.ok) {
@@ -54,7 +56,7 @@ export default function FAQSection() {
         }
 
         const json: ApiResponse = await response.json();
-        console.log("JSON recibido:", json);
+        console.log("✅ JSON recibido:", json);
         
         if (json.data && json.data.attributes) {
           setHero(json.data.attributes);
@@ -62,7 +64,7 @@ export default function FAQSection() {
           throw new Error("Estructura de datos incorrecta");
         }
       } catch (err) {
-        console.error("Error fetching data:", err);
+        console.error("❌ Error fetching data:", err);
         setError(err instanceof Error ? err.message : "Error desconocido");
       } finally {
         setLoading(false);
@@ -72,43 +74,19 @@ export default function FAQSection() {
     fetchData();
   }, []);
 
-  // ... el resto del componente se mantiene igual
   const [openItems, setOpenItems] = useState<number[]>([0]);
 
-  const faqs = [
-    {
-      question: hero?.pregunta1 || "Cargando pregunta...",
-      answer: hero?.respuesta1 || "Cargando respuesta...",
-    },
-    {
-      question: hero?.pregunta2 || "Cargando pregunta...",
-      answer: hero?.respuesta2 || "Cargando respuesta...",
-    },
-    {
-      question: hero?.pregunta3 || "Cargando pregunta...",
-      answer: hero?.respuesta3 || "Cargando respuesta...",
-    },
-    {
-      question: hero?.pregunta4 || "Cargando pregunta...",
-      answer: hero?.respuesta4 || "Cargando respuesta...",
-    },
-    {
-      question: hero?.pregunta5 || "Cargando pregunta...",
-      answer: hero?.respuesta5 || "Cargando respuesta...",
-    },
-    {
-      question: hero?.pregunta6 || "Cargando pregunta...",
-      answer: hero?.respuesta6 || "Cargando respuesta...",
-    },
-    {
-      question: hero?.pregunta7 || "Cargando pregunta...",
-      answer: hero?.respuesta7 || "Cargando respuesta...",
-    },
-    {
-      question: hero?.pregunta8 || "Cargando pregunta...",
-      answer: hero?.respuesta8 || "Cargando respuesta...",
-    },
-  ];
+  // Preparar las FAQs - optimizado
+  const faqs = hero ? [
+    { question: hero.pregunta1, answer: hero.respuesta1 },
+    { question: hero.pregunta2, answer: hero.respuesta2 },
+    { question: hero.pregunta3, answer: hero.respuesta3 },
+    { question: hero.pregunta4, answer: hero.respuesta4 },
+    { question: hero.pregunta5, answer: hero.respuesta5 },
+    { question: hero.pregunta6, answer: hero.respuesta6 },
+    { question: hero.pregunta7, answer: hero.respuesta7 },
+    { question: hero.pregunta8, answer: hero.respuesta8 },
+  ] : [];
 
   const toggleItem = (index: number) => {
     setOpenItems((prev) =>
@@ -178,6 +156,12 @@ export default function FAQSection() {
               <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
                 {error}
               </p>
+              <button 
+                onClick={() => window.location.reload()}
+                className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+              >
+                Reintentar
+              </button>
             </div>
           </div>
         </div>
@@ -216,67 +200,73 @@ export default function FAQSection() {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
-          {faqs.map((faq, index) => (
-            <motion.div key={index} variants={itemVariants}>
-              <Card className="overflow-hidden bg-background/60 backdrop-blur-sm border transition-all duration-300 hover:shadow-lg dark:bg-background/80">
-                <motion.button
-                  className="w-full text-left focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-lg"
-                  onClick={() => toggleItem(index)}
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                >
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold pr-4 leading-relaxed">
-                        {faq.question}
-                      </h3>
-                      <motion.div
-                        animate={{
-                          rotate: openItems.includes(index) ? 180 : 0,
-                        }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="flex-shrink-0"
-                      >
-                        <ChevronDown className="h-5 w-5 text-muted-foreground" />
-                      </motion.div>
-                    </div>
-                  </CardContent>
-                </motion.button>
-
-                <AnimatePresence>
-                  {openItems.includes(index) && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className="overflow-hidden"
-                    >
-                      <CardContent className="px-6 pb-6 pt-0">
+          {faqs.length > 0 ? (
+            faqs.map((faq, index) => (
+              <motion.div key={index} variants={itemVariants}>
+                <Card className="overflow-hidden bg-background/60 backdrop-blur-sm border transition-all duration-300 hover:shadow-lg dark:bg-background/80">
+                  <motion.button
+                    className="w-full text-left focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-lg"
+                    onClick={() => toggleItem(index)}
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                  >
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-lg font-semibold pr-4 leading-relaxed">
+                          {faq.question}
+                        </h3>
                         <motion.div
-                          initial={{ y: -10, opacity: 0 }}
-                          animate={{ y: 0, opacity: 1 }}
-                          exit={{ y: -10, opacity: 0 }}
-                          transition={{ duration: 0.2, delay: 0.1 }}
-                          className="border-t pt-4"
+                          animate={{
+                            rotate: openItems.includes(index) ? 180 : 0,
+                          }}
+                          transition={{ duration: 0.3, ease: "easeInOut" }}
+                          className="flex-shrink-0"
                         >
-                          <p className="text-muted-foreground leading-relaxed">
-                            {faq.answer}
-                          </p>
+                          <ChevronDown className="h-5 w-5 text-muted-foreground" />
                         </motion.div>
-                      </CardContent>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                      </div>
+                    </CardContent>
+                  </motion.button>
 
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 pointer-events-none"
-                  whileHover={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                />
-              </Card>
-            </motion.div>
-          ))}
+                  <AnimatePresence>
+                    {openItems.includes(index) && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                      >
+                        <CardContent className="px-6 pb-6 pt-0">
+                          <motion.div
+                            initial={{ y: -10, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: -10, opacity: 0 }}
+                            transition={{ duration: 0.2, delay: 0.1 }}
+                            className="border-t pt-4"
+                          >
+                            <p className="text-muted-foreground leading-relaxed">
+                              {faq.answer}
+                            </p>
+                          </motion.div>
+                        </CardContent>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 pointer-events-none"
+                    whileHover={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </Card>
+              </motion.div>
+            ))
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">No hay preguntas frecuentes disponibles.</p>
+            </div>
+          )}
         </motion.div>
 
         <motion.div
