@@ -49,17 +49,20 @@ export default function UseCases() {
     })
       .then((res) => res.json())
       .then((json) => {
-        console.log("JSON recibido:", json);
-        // 👇 importante: acceder a data.attributes en Strapi
-        if (json?.data?.attributes) {
+        console.log("📦 JSON recibido:", json);
+
+        // Caso 1: API devuelve los campos directo dentro de `data`
+        if (json?.data && !json?.data?.attributes) {
+          setHero(json.data);
+        }
+        // Caso 2: API devuelve los campos dentro de `attributes`
+        else if (json?.data?.attributes) {
           setHero(json.data.attributes);
-        } else if (Array.isArray(json?.data) && json.data[0]?.attributes) {
-          setHero(json.data[0].attributes); // si fuera colección
         } else {
-          setHero(null);
+          console.warn("⚠️ Estructura inesperada en la API");
         }
       })
-      .catch((err) => console.error("Error al traer data de Strapi:", err));
+      .catch((err) => console.error("❌ Error al traer data de Strapi:", err));
   }, []);
 
   if (!hero) {
