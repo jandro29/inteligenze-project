@@ -50,7 +50,45 @@ export default function UseCases() {
       .then((res) => res.json())
       .then((json) => {
         console.log("JSON recibido:", json);
-        setHero(json.data || null);
+
+        // ✅ aseguramos que sea un Hero válido
+        if (json && json.data) {
+          const { 
+            titulo1,
+            PrimerTitulo,
+            contenido,
+            tituloprimercuadro,
+            contenidoprimercuadro,
+            titulosegundocuadro,
+            contenidosegundocuadro,
+            titulotercercuadro,
+            contenidotercercuadro,
+            titulocuartocuadro,
+            contenidocuartocuadro,
+            tituloquintocuadro,
+            contenidoquintocuadro,
+            titulosextocuadro,
+            contenidosextocuadro,
+          } = json.data;
+
+          setHero({
+            titulo1,
+            PrimerTitulo,
+            contenido,
+            tituloprimercuadro,
+            contenidoprimercuadro,
+            titulosegundocuadro,
+            contenidosegundocuadro,
+            titulotercercuadro,
+            contenidotercercuadro,
+            titulocuartocuadro,
+            contenidocuartocuadro,
+            tituloquintocuadro,
+            contenidoquintocuadro,
+            titulosextocuadro,
+            contenidosextocuadro,
+          });
+        }
       })
       .catch((err) => console.error("Error al traer data de Strapi:", err));
   }, []);
