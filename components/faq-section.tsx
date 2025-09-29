@@ -27,12 +27,6 @@ interface Hero {
   respuesta8: string;
 }
 
-interface ApiResponse {
-  data: {
-    attributes: Hero;
-  };
-}
-
 export default function FAQSection() {
   const [hero, setHero] = useState<Hero | null>(null);
   const [loading, setLoading] = useState(true);
@@ -43,29 +37,44 @@ export default function FAQSection() {
       try {
         setLoading(true);
         setError(null);
+        console.log('🔄 Iniciando fetch a Strapi...');
         
         const response = await fetch("http://34.170.207.129:1337/api/septimo-contenedor", {
-          cache: "no-store",
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
           },
+          mode: 'cors', // Añadir explícitamente
+          cache: "no-cache",
         });
 
+        console.log('📡 Response status:', response.status);
+        console.log('📡 Response ok:', response.ok);
+
         if (!response.ok) {
-          throw new Error(`Error HTTP: ${response.status}`);
+          const errorText = await response.text();
+          console.error('❌ Error response:', errorText);
+          throw new Error(`Error HTTP ${response.status}: ${response.statusText}`);
         }
 
-        const json: ApiResponse = await response.json();
+        const json = await response.json();
         console.log("✅ JSON recibido:", json);
         
+        // Verifica diferentes estructuras posibles de respuesta
         if (json.data && json.data.attributes) {
           setHero(json.data.attributes);
+        } else if (json.attributes) {
+          setHero(json.attributes);
+        } else if (json) {
+          // Si la respuesta viene directamente
+          setHero(json);
         } else {
-          throw new Error("Estructura de datos incorrecta");
+          throw new Error("Estructura de datos inesperada");
         }
       } catch (err) {
-        console.error("❌ Error fetching data:", err);
-        setError(err instanceof Error ? err.message : "Error desconocido");
+        console.error("❌ Error completo:", err);
+        setError(err instanceof Error ? err.message : "Error de conexión con el servidor");
       } finally {
         setLoading(false);
       }
@@ -76,17 +85,32 @@ export default function FAQSection() {
 
   const [openItems, setOpenItems] = useState<number[]>([0]);
 
-  // Preparar las FAQs - optimizado
+  // Datos de fallback en caso de error
+  const fallbackFAQs = [
+    {
+      question: "¿Qué es Inteligence?",
+      answer: "Inteligence es una plataforma de IA diseñada para transformar cómo las organizaciones manejan el conocimiento y la atención al cliente."
+    },
+    {
+      question: "¿Cómo puedo integrar la plataforma?",
+      answer: "Ofrecemos múltiples opciones de integración con tus sistemas existentes a través de nuestra API y conectores preconstruidos."
+    },
+    {
+      question: "¿Qué tipo de soporte ofrecen?",
+      answer: "Proporcionamos soporte técnico especializado, documentación completa y asistencia personalizada para implementaciones empresariales."
+    }
+  ];
+
   const faqs = hero ? [
-    { question: hero.pregunta1, answer: hero.respuesta1 },
-    { question: hero.pregunta2, answer: hero.respuesta2 },
-    { question: hero.pregunta3, answer: hero.respuesta3 },
-    { question: hero.pregunta4, answer: hero.respuesta4 },
-    { question: hero.pregunta5, answer: hero.respuesta5 },
-    { question: hero.pregunta6, answer: hero.respuesta6 },
-    { question: hero.pregunta7, answer: hero.respuesta7 },
-    { question: hero.pregunta8, answer: hero.respuesta8 },
-  ] : [];
+    { question: hero.pregunta1 || "Pregunta 1", answer: hero.respuesta1 || "Respuesta 1" },
+    { question: hero.pregunta2 || "Pregunta 2", answer: hero.respuesta2 || "Respuesta 2" },
+    { question: hero.pregunta3 || "Pregunta 3", answer: hero.respuesta3 || "Respuesta 3" },
+    { question: hero.pregunta4 || "Pregunta 4", answer: hero.respuesta4 || "Respuesta 4" },
+    { question: hero.pregunta5 || "Pregunta 5", answer: hero.respuesta5 || "Respuesta 5" },
+    { question: hero.pregunta6 || "Pregunta 6", answer: hero.respuesta6 || "Respuesta 6" },
+    { question: hero.pregunta7 || "Pregunta 7", answer: hero.respuesta7 || "Respuesta 7" },
+    { question: hero.pregunta8 || "Pregunta 8", answer: hero.respuesta8 || "Respuesta 8" },
+  ] : fallbackFAQs;
 
   const toggleItem = (index: number) => {
     setOpenItems((prev) =>
@@ -96,6 +120,7 @@ export default function FAQSection() {
     );
   };
 
+  // ... (el resto de tu código de animaciones y renderizado se mantiene igual)
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -140,35 +165,6 @@ export default function FAQSection() {
     );
   }
 
-  // Mostrar error
-  if (error) {
-    return (
-      <section className="py-20 bg-gradient-to-b from-background to-muted/30 dark:from-background dark:to-muted/10">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-            <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 rounded-lg bg-destructive px-3 py-1 text-sm text-destructive-foreground mb-2">
-                Error
-              </div>
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                Error al cargar las preguntas
-              </h2>
-              <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-                {error}
-              </p>
-              <button 
-                onClick={() => window.location.reload()}
-                className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-              >
-                Reintentar
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section className="py-20 bg-gradient-to-b from-background to-muted/30 dark:from-background dark:to-muted/10">
       <div className="container px-4 md:px-6">
@@ -188,8 +184,15 @@ export default function FAQSection() {
               {hero?.PrimerTitulo || "Preguntas Frecuentes"}
             </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-              {hero?.contenido || "Encuentra respuestas a las preguntas más comunes"}
+              {hero?.contenido || "Encuentra respuestas a las preguntas más comunes sobre nuestra plataforma"}
             </p>
+            {error && (
+              <div className="mt-4 p-3 bg-yellow-100 border border-yellow-400 rounded-lg">
+                <p className="text-yellow-800 text-sm">
+                  ⚠️ Usando datos de ejemplo: {error}
+                </p>
+              </div>
+            )}
           </div>
         </motion.div>
 
@@ -200,73 +203,61 @@ export default function FAQSection() {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
-          {faqs.length > 0 ? (
-            faqs.map((faq, index) => (
-              <motion.div key={index} variants={itemVariants}>
-                <Card className="overflow-hidden bg-background/60 backdrop-blur-sm border transition-all duration-300 hover:shadow-lg dark:bg-background/80">
-                  <motion.button
-                    className="w-full text-left focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-lg"
-                    onClick={() => toggleItem(index)}
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
-                  >
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-semibold pr-4 leading-relaxed">
-                          {faq.question}
-                        </h3>
-                        <motion.div
-                          animate={{
-                            rotate: openItems.includes(index) ? 180 : 0,
-                          }}
-                          transition={{ duration: 0.3, ease: "easeInOut" }}
-                          className="flex-shrink-0"
-                        >
-                          <ChevronDown className="h-5 w-5 text-muted-foreground" />
-                        </motion.div>
-                      </div>
-                    </CardContent>
-                  </motion.button>
-
-                  <AnimatePresence>
-                    {openItems.includes(index) && (
+          {faqs.map((faq, index) => (
+            <motion.div key={index} variants={itemVariants}>
+              <Card className="overflow-hidden bg-background/60 backdrop-blur-sm border transition-all duration-300 hover:shadow-lg dark:bg-background/80">
+                <motion.button
+                  className="w-full text-left focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-lg"
+                  onClick={() => toggleItem(index)}
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                >
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold pr-4 leading-relaxed">
+                        {faq.question}
+                      </h3>
                       <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
+                        animate={{
+                          rotate: openItems.includes(index) ? 180 : 0,
+                        }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="overflow-hidden"
+                        className="flex-shrink-0"
                       >
-                        <CardContent className="px-6 pb-6 pt-0">
-                          <motion.div
-                            initial={{ y: -10, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            exit={{ y: -10, opacity: 0 }}
-                            transition={{ duration: 0.2, delay: 0.1 }}
-                            className="border-t pt-4"
-                          >
-                            <p className="text-muted-foreground leading-relaxed">
-                              {faq.answer}
-                            </p>
-                          </motion.div>
-                        </CardContent>
+                        <ChevronDown className="h-5 w-5 text-muted-foreground" />
                       </motion.div>
-                    )}
-                  </AnimatePresence>
+                    </div>
+                  </CardContent>
+                </motion.button>
 
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 pointer-events-none"
-                    whileHover={{ opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                </Card>
-              </motion.div>
-            ))
-          ) : (
-            <div className="text-center py-8">
-              <p className="text-muted-foreground">No hay preguntas frecuentes disponibles.</p>
-            </div>
-          )}
+                <AnimatePresence>
+                  {openItems.includes(index) && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <CardContent className="px-6 pb-6 pt-0">
+                        <motion.div
+                          initial={{ y: -10, opacity: 0 }}
+                          animate={{ y: 0, opacity: 1 }}
+                          exit={{ y: -10, opacity: 0 }}
+                          transition={{ duration: 0.2, delay: 0.1 }}
+                          className="border-t pt-4"
+                        >
+                          <p className="text-muted-foreground leading-relaxed">
+                            {faq.answer}
+                          </p>
+                        </motion.div>
+                      </CardContent>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </Card>
+            </motion.div>
+          ))}
         </motion.div>
 
         <motion.div
