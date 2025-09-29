@@ -38,31 +38,44 @@ export default function FAQSection() {
   useEffect(() => {
     // Usa variable de entorno para la URL
     const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "http://34.170.207.129:1337";
+    const fullUrl = `${apiUrl}/api/septimo-contenedor`;
+    
+    console.log("🔍 Intentando cargar desde:", fullUrl);
+    console.log("🌍 Environment:", process.env.NODE_ENV);
     
     setLoading(true);
     setError(null);
     
-    fetch(`${apiUrl}/api/septimo-contenedor`, {
+    fetch(fullUrl, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
       cache: 'no-store',
+      mode: 'cors',
     })
       .then((res) => {
+        console.log("📡 Respuesta recibida:", res.status, res.statusText);
         if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
+          throw new Error(`HTTP error! status: ${res.status} - ${res.statusText}`);
         }
         return res.json();
       })
       .then((json) => {
-        console.log("JSON recibido:", json);
-        setHero(json.data);
+        console.log("✅ JSON recibido:", json);
+        if (json.data) {
+          setHero(json.data);
+          console.log("✅ Hero data actualizada:", json.data);
+        } else {
+          console.warn("⚠️ No hay 'data' en la respuesta:", json);
+          setError("Estructura de datos incorrecta");
+        }
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Error fetching data:", err);
-        setError(err.message);
+        console.error("❌ Error fetching data:", err);
+        console.error("❌ Error completo:", err.message);
+        setError(`Error: ${err.message} - URL: ${fullUrl}`);
         setLoading(false);
       });
   }, []);
