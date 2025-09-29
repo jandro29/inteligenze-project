@@ -1,54 +1,59 @@
-import { Button } from "@/components/ui/button"
-import { Bot, Database, Shield, Users, Zap } from "lucide-react"
-import ContactForm from "@/components/contact-form"
-import Testimonials from "@/components/testimonials"
-import UseCases from "@/components/use-cases"
-import Navbar from "@/components/navbar"
-import Footer from "@/components/footer"
-import TypingPromptInput from "@/components/typing-prompt-input"
-import FramerSpotlight from "@/components/framer-spotlight"
-import CssGridBackground from "@/components/css-grid-background"
-import FeaturesSection from "@/components/features-section"
-import StructuredData from "@/components/structured-data"
-import EfficiencyHighlights from "@/components/efficiency-highlights"
-import IntegrationsGallery from "@/components/integrations-gallery"
-import FAQSection from "@/components/faq-section"
+import { Button } from "@/components/ui/button";
+import { Bot, Database, Shield, Users, Zap } from "lucide-react";
+import ContactForm from "@/components/contact-form";
+import Testimonials from "@/components/testimonials";
+import UseCases from "@/components/use-cases";
+import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
+import TypingPromptInput from "@/components/typing-prompt-input";
+import FramerSpotlight from "@/components/framer-spotlight";
+import CssGridBackground from "@/components/css-grid-background";
+import FeaturesSection from "@/components/features-section";
+import StructuredData from "@/components/structured-data";
+//import EfficiencyHighlights from "@/components/efficiency-highlights"
+import IntegrationsGallery from "@/components/integrations-gallery";
+import FAQSection from "@/components/faq-section";
 
+export const dynamic = "force-dynamic";
 
-export const dynamic = 'force-dynamic'
-
-export const revalidate = 0
+export const revalidate = 0;
 
 interface Hero {
-  firsttitle: string;
-  secondsubtitle: string;
+  titulo1: string;
+  PrimerTitulo: string;
+  contenido: string;
+  contenidoBusqueda1: string;
+  contenidoBusqueda2: string;
+  contenidoBusqueda3: string;
+  button1: string;
+  button2: string;
 }
 
 interface ThirtSection {
-  tercerasecciontitulo: string;
-  terceraseccionsubtitulo: string;
-  tercera_seccion_titulo_primer_card: string;
-  tercera_seccion_contenido_primer_card: string;
-  tercera_seccion_titulo_segundo_card: string;
-  tercera_seccion_contenido_segundo_card: string;
-  tercera_seccion_titulo_tercer_card: string;
-  tercera_seccion_contenido_tercer_card: string;
+  PrimerTitulo: string;
+  contenido: string;
+  subtitulo1: string;
+  contenido1: string;
+  subtitulo2: string;
+  contenido2: string;
+  subtitulo3: string;
+  contenido3: string;
 }
 
 interface ninesection {
-  titulo: string;
-  contenido: string;
-  benficio1: string;
-  benficio2: string;
-  benficio3: string;
-  benficio4: string;
-  ultimotexto: string;
+  PrimerTitulo:string;
+  contenido:string;
+  beneficio1:string;
+  beneficio2:string;
+  beneficio3:string;
+  beneficio4:string;
+  ultimoTexto:string;
 }
 
 async function fetchMultiple(endpoints: string[]) {
   const responses = await Promise.all(
     endpoints.map((endpoint) =>
-      fetch(`http://35.238.156.185:1337/api/${endpoint}`, { cache: "no-store" })
+      fetch(`http://34.170.207.129:1337/api/${endpoint}`, { cache: "no-store" })
         .then((res) => res.json())
         .then((json) => json.data)
     )
@@ -57,8 +62,11 @@ async function fetchMultiple(endpoints: string[]) {
 }
 
 export default async function Home() {
-
-  const [hero, hero2, hero3] = await fetchMultiple(["first-section", "thirtsection", "ninesection"]);
+  const [hero, hero2, hero3] = await fetchMultiple([
+    "primer-contenedor",
+    "tercer-contenido",
+    "octavo-contenedor",
+  ]);
   return (
     <>
       <StructuredData />
@@ -66,17 +74,22 @@ export default async function Home() {
         <Navbar />
 
         {/* Sección Hero */}
-        <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <section
+          id="hero"
+          className="relative min-h-screen flex items-center justify-center overflow-hidden"
+        >
           <CssGridBackground />
           <FramerSpotlight />
           <div className="container px-4 md:px-6 py-16 md:py-20">
             <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
-              <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm mb-6">Solución IA Empresarial</div>
+              <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm mb-6">
+                {hero?.titulo1 ?? "No hay título"}
+              </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter mb-6">
-                {hero?.firsttitle ?? "No hay título"}
+                {hero?.PrimerTitulo ?? "No hay título"}
               </h1>
               <p className="text-xl text-muted-foreground md:text-2xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed max-w-2xl mb-12">
-                {hero?.secondsubtitle ?? "No hay subtítulo"}
+                {hero?.contenido ?? "No hay subtítulo"}
               </p>
 
               <TypingPromptInput />
@@ -86,8 +99,12 @@ export default async function Home() {
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/30 to-primary/0 dark:opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-x-[-100%] group-hover:translate-x-[100%]"></div>
                   <Zap className="h-5 w-5 text-white relative z-10" />
                   <div className="flex flex-col items-start relative z-10">
-                    <span className="text-[15px] font-medium">Solicitar Demo</span>
-                    <span className="text-xs text-gray-400 dark:text-gray-300 -mt-0.5">v1.0.0</span>
+                    <span className="text-[15px] font-medium">
+                      Solicitar Demo
+                    </span>
+                    <span className="text-xs text-gray-400 dark:text-gray-300 -mt-0.5">
+                      v1.0.0
+                    </span>
                   </div>
                 </Button>
                 <Button className="px-5 py-6 h-[60px] rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-[15px] font-medium text-foreground">
@@ -114,10 +131,10 @@ export default async function Home() {
                   id="how-it-works-heading"
                   className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl"
                 >
-                  {hero2?.tercerasecciontitulo ?? "No hay subtítulo"}
+                  {hero2?.PrimerTitulo ?? "No hay subtítulo"}
                 </h2>
                 <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-                  {hero2?.terceraseccionsubtitulo ?? "No hay subtítulo"}
+                  {hero2?.contenido ?? "No hay subtítulo"}
                 </p>
               </div>
             </div>
@@ -127,12 +144,10 @@ export default async function Home() {
                   <span className="text-2xl font-bold">1</span>
                 </div>
                 <h3 className="text-xl font-bold">
-                  {hero2?.tercera_seccion_titulo_primer_card ??
-                    "No hay subtítulo"}
+                  {hero2?.subtitulo1 ?? "No hay subtítulo"}
                 </h3>
                 <p className="text-muted-foreground">
-                  {hero2?.tercera_seccion_contenido_primer_card ??
-                    "No hay subtítulo"}
+                  {hero2?.contenido1 ?? "No hay subtítulo"}
                 </p>
               </div>
               <div className="flex flex-col items-center space-y-4 text-center">
@@ -140,12 +155,10 @@ export default async function Home() {
                   <span className="text-2xl font-bold">2</span>
                 </div>
                 <h3 className="text-xl font-bold">
-                  {hero2?.tercera_seccion_titulo_segundo_card ??
-                    "No hay subtítulo"}
+                  {hero2?.subtitulo2 ?? "No hay subtítulo"}
                 </h3>
                 <p className="text-muted-foreground">
-                  {hero2?.tercera_seccion_contenido_segundo_card ??
-                    "No hay subtítulo"}
+                  {hero2?.contenido2 ?? "No hay subtítulo"}
                 </p>
               </div>
               <div className="flex flex-col items-center space-y-4 text-center">
@@ -153,18 +166,15 @@ export default async function Home() {
                   <span className="text-2xl font-bold">3</span>
                 </div>
                 <h3 className="text-xl font-bold">
-                  {hero2?.tercera_seccion_titulo_tercer_card ??
-                    "No hay subtítulo"}
+                  {hero2?.subtitulo3 ?? "No hay subtítulo"}
                 </h3>
                 <p className="text-muted-foreground">
-                  {hero2?.tercera_seccion_contenido_tercer_card ??
-                    "No hay subtítulo"}
+                  {hero2?.contenido3 ?? "No hay subtítulo"}
                 </p>
               </div>
             </div>
           </div>
         </section>
-
 
         {/* Casos de Uso */}
         <UseCases />
@@ -173,7 +183,7 @@ export default async function Home() {
         <Testimonials />
 
         {/* Destacados de Eficiencia */}
-        <EfficiencyHighlights />
+        {/* <EfficiencyHighlights />*/}
 
         {/* Galería de Integraciones */}
         <IntegrationsGallery />
@@ -181,7 +191,7 @@ export default async function Home() {
         {/* Sección FAQ */}
         <FAQSection />
 
-         {/* Sección de Contacto/Precios */}
+        {/* Sección de Contacto/Precios */}
         <section
           id="contact"
           className="py-20 bg-muted/50 dark:bg-muted/10"
@@ -195,7 +205,7 @@ export default async function Home() {
                     id="contact-heading"
                     className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl"
                   >
-                    {hero3?.titulo ?? "No hay subtítulo"}
+                    {hero3?.PrimerTitulo ?? "No hay subtítulo"}
                   </h2>
                   <p className="text-muted-foreground md:text-xl">
                     {hero3?.contenido ?? "No hay subtítulo"}
@@ -204,26 +214,24 @@ export default async function Home() {
                 <div className="space-y-4">
                   <div className="flex items-center gap-2">
                     <Users className="h-5 w-5 text-primary" />
-                    <span>
-                      {hero3?.contenido ?? "No hay subtítulo"}
-                    </span>
+                    <span>{hero3?.beneficio1 ?? "No hay subtítulo"}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Database className="h-5 w-5 text-primary" />
-                    <span>{hero3?.benficio2 ?? "No hay subtítulo"}</span>
+                    <span>{hero3?.beneficio2 ?? "No hay subtítulo"}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Bot className="h-5 w-5 text-primary" />
-                    <span>{hero3?.benficio3 ?? "No hay subtítulo"}</span>
+                    <span>{hero3?.beneficio3 ?? "No hay subtítulo"}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Shield className="h-5 w-5 text-primary" />
-                    <span>{hero3?.benficio4 ?? "No hay subtítulo"}</span>
+                    <span>{hero3?.beneficio4 ?? "No hay subtítulo"}</span>
                   </div>
                 </div>
                 <div className="pt-4">
                   <p className="font-medium">
-                    {hero3?.ultimotexto ?? "No hay subtítulo"}
+                    {hero3?.ultimoTexto ?? "No hay subtítulo"}
                   </p>
                 </div>
               </div>
@@ -233,8 +241,8 @@ export default async function Home() {
             </div>
           </div>
         </section>
-        <Footer />
+       {/* <Footer /> */}
       </div>
     </>
-  )
+  );
 }

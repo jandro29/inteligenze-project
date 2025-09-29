@@ -25,27 +25,35 @@ export const revalidate = 0
 
 
 interface Hero {
-  titulo: string;
-  subtitulo: string;
-  primertitulobox: string;
-  primercontenidobox: string;
-  segundotitulobox: string;
-  segundocontenidobox: string;
-  tercertitulobox: string;
-  tercercontenidobox: string;
-  cuartotitulobox: string;
-  cuartocontenidobox: string;
-  quintotitulobox: string;
-  quintocontenidobox: string;
-  sextotitulobox: string;
-  sextocontenidobox: string;
+  titulo1: string;
+  PrimerTitulo: string;
+  contenido: string;
+  image1:ImageBitmap;
+  tituloprimercuadro:string;
+  contenidoprimercuadro:string;
+  image2:ImageBitmap;
+  titulosegundocuadro:string;
+  contenidosegundocuadro:string;
+  image3:ImageBitmap;
+  titulotercercuadro:string;
+  contenidotercercuadro:string;
+  image4:ImageBitmap;
+  titulocuartocuadro:string;
+  contenidocuartocuadro:string;
+  image5:ImageBitmap;
+  tituloquintocuadro:string;
+  contenidoquintocuadro:string;
+  image6:ImageBitmap;
+  titulosextocuadro:string;
+  contenidosextocuadro:string;
+ 
 }
 
 export default function UseCases() {
   const [hero, setHero] = useState<Hero | null>(null);
 
   useEffect(() => {
-    fetch("http://35.238.156.185:1337/api/foursection", { cache: "no-store" })
+    fetch("http://34.170.207.129:1337/api/cuarto-contenido", { cache: "no-store" })
       .then((res) => res.json())
       .then((json) => {
         console.log(" JSON recibido:", json);
@@ -57,38 +65,38 @@ export default function UseCases() {
   const useCases = [
     {
       icon: <BuildingIcon />,
-      title: hero?.primertitulobox ?? "Cargando...",
-      description: hero?.primercontenidobox ?? "Esperando contenido...",
+      title: hero?.tituloprimercuadro ?? "Cargando...",
+      description: hero?.contenidoprimercuadro ?? "Esperando contenido...",
       accentColor: "rgba(59, 130, 246, 0.5)",
     },
     {
       icon: <GovernmentIcon />,
-      title: hero?.segundotitulobox ?? "Cargando...",
-      description: hero?.segundocontenidobox ?? "Esperando contenido...",
+      title: hero?.titulosegundocuadro ?? "Cargando...",
+      description: hero?.contenidosegundocuadro ?? "Esperando contenido...",
       accentColor: "rgba(139, 92, 246, 0.5)",
     },
     {
       icon: <FinanceIcon />,
-      title: hero?.tercertitulobox ?? "Cargando...",
-      description: hero?.tercercontenidobox ?? "Esperando contenido...",
+      title: hero?.titulotercercuadro ?? "Cargando...",
+      description: hero?.contenidotercercuadro ?? "Esperando contenido...",
       accentColor: "rgba(245, 158, 11, 0.5)",
     },
     {
       icon: <HealthcareIcon />,
-      title: hero?.cuartotitulobox ?? "Cargando...",
-      description: hero?.cuartocontenidobox ?? "Esperando contenido...",
+      title: hero?.titulocuartocuadro ?? "Cargando...",
+      description: hero?.contenidocuartocuadro ?? "Esperando contenido...",
       accentColor: "rgba(239, 68, 68, 0.5)",
     },
     {
       icon: <LegalIcon />,
-      title: hero?.quintotitulobox ?? "Cargando...",
-      description: hero?.quintocontenidobox ?? "Esperando contenido...",
+      title: hero?.tituloquintocuadro ?? "Cargando...",
+      description: hero?.contenidoquintocuadro ?? "Esperando contenido...",
       accentColor: "rgba(132, 204, 22, 0.5)",
     },
     {
       icon: <EducationIcon />,
-      title: hero?.sextotitulobox ?? "Cargando...",
-      description: hero?.sextocontenidobox ?? "Esperando contenido...",
+      title: hero?.titulosextocuadro ?? "Cargando...",
+      description: hero?.contenidosextocuadro ?? "Esperando contenido...",
       accentColor: "rgba(14, 165, 233, 0.5)",
     },
   ];
@@ -128,13 +136,13 @@ export default function UseCases() {
         >
           <div className="space-y-2">
             <div className="inline-block rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground mb-2">
-              Casos de Uso
+              {hero?.titulo1 ?? "Cargando..."}
             </div>
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              {hero?.titulo ?? "Cargando..."}
+              {hero?.PrimerTitulo ?? "Cargando..."}
             </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-              {hero?.subtitulo ?? "Esperando subtítulo..."}
+              {hero?.contenido ?? "Esperando subtítulo..."}
             </p>
           </div>
         </motion.div>

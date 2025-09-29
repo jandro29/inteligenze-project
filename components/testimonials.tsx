@@ -7,22 +7,23 @@ export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
 interface Hero {
-  titulo: string;
-  subtitulo: string;
-  primercomentariobox : string;
-  primercomentariopersonabox : string;
-  puestoprimercomentariobox : string;
-  segundocomentariobox: string;
-  segundocomentariopersonabox : string;
-  puestosegundocomentariobox : string;
-  tercercomentariobox : string;
-  tercercomentariopersonabox : string;
-  puestotercercomentariobox : string;
+  titulo1:string;
+  PrimerTitulo:string;
+  contenido:string;
+  testimonio1:string;
+  personatestimonio1:string;
+  roltestimonio1:string;
+  testimonio2:string;
+  personatestimonio2:string;
+  roltestimonio2:string;
+  testimonio3:string;
+  personatestimonio3:string;
+  roltestimonio3:string;
 }
 
 
 export default async function Testimonials() {
- const res = await fetch("http://35.238.156.185:1337/api/fivesection", {
+ const res = await fetch("http://34.170.207.129:1337/api/quinto-contenido", {
     cache: "no-store",
   });
 
@@ -34,21 +35,21 @@ export default async function Testimonials() {
 
   const testimonials = [
     {
-      quote:hero?.primercomentariobox ?? "Cargando...",
-      name: hero?.primercomentariopersonabox ?? "Cargando...",
-      title: hero?.puestoprimercomentariobox ?? "Cargando...",
+      quote:hero?.testimonio1 ?? "Cargando...",
+      name: hero?.personatestimonio1 ?? "Cargando...",
+      title: hero?.roltestimonio1 ?? "Cargando...",
       avatar: "SC",
     },
     {
-      quote:hero?.segundocomentariobox ?? "Cargando...",
-      name: hero?.segundocomentariopersonabox ?? "Cargando...",
-      title: hero?.puestosegundocomentariobox ?? "Cargando...",
+      quote:hero?.testimonio2 ?? "Cargando...",
+      name: hero?.personatestimonio2 ?? "Cargando...",
+      title: hero?.roltestimonio2 ?? "Cargando...",
       avatar: "MJ",
     },
     {
-      quote:hero?.tercercomentariobox ?? "Cargando...",
-      name: hero?.tercercomentariopersonabox ?? "Cargando...",
-      title: hero?.puestotercercomentariobox ?? "Cargando...",
+      quote:hero?.testimonio3 ?? "Cargando...",
+      name: hero?.personatestimonio3 ?? "Cargando...",
+      title: hero?.roltestimonio3 ?? "Cargando...",
       avatar: "DR",
     },
   ]
@@ -59,13 +60,13 @@ export default async function Testimonials() {
         <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
           <div className="space-y-2">
             <div className="inline-block rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground mb-2">
-              Testimonios
+              {hero?.titulo1 ?? "Cargando..."}
             </div>
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              {hero?.titulo ?? "Cargando..."}
+              {hero?.PrimerTitulo ?? "Cargando..."}
             </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-              {hero?.subtitulo ?? "Cargando..."}
+              {hero?.contenido ?? "Cargando..."}
             </p>
           </div>
         </div>

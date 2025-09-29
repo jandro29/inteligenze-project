@@ -1,44 +1,46 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { ArrowRight, ExternalLink } from "lucide-react"
-import { useEffect, useState } from "react"
+import { motion } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, ExternalLink } from "lucide-react";
+import { useEffect, useState } from "react";
 
+export const dynamic = "force-dynamic";
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 0;
 
-export const revalidate = 0
-
-
-interface Hero{
-  titulo: string;
-  subtitulo: string;
-  primerotituloblanco: string;
-  segundotituloceleste: string;
+interface Hero {
+  titulo1: string;
+  PrimerTitulo: string;
   contenido: string;
+  primerTextoAzul: string;
+  textoBlanco: string;
+  segundoTextoAzul: string;
+  textoInformativo: string;
+  numeroIntegraciones: string;
+  integraciones: string;
+  numeroTiempoActivo: string;
+  tiempoactivo: string;
 }
 
 
-
-
 export default function IntegrationsGallery() {
-  
-
   const [hero, setHero] = useState<Hero | null>(null);
-  
-    useEffect(() => {
-      fetch("http://35.238.156.185:1337/api/sevensection", { cache: "no-store" })
-        .then((res) => res.json())
-        .then((json) => {
-          console.log(" JSON recibido:", json);
-          setHero(json.data);
-        })
-        .catch((err) => console.error(err));
-    }, []);
-    
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch("http://35.238.156.185:1337/api/sexto-contenedor", {
+      cache: "no-store",
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(" JSON recibido:", json);
+        setHero(json.data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   const topIntegrations = [
     {
@@ -83,7 +85,7 @@ export default function IntegrationsGallery() {
       color: "#4A154B",
       description: "Colaboración en equipo",
     },
-  ]
+  ];
 
   const topLLMProviders = [
     {
@@ -121,7 +123,7 @@ export default function IntegrationsGallery() {
       color: "#8B5CF6",
       description: "Modelos optimizados",
     },
-  ]
+  ];
 
   const IntegrationItem = ({ item, index }: { item: any; index: number }) => (
     <motion.div
@@ -154,12 +156,15 @@ export default function IntegrationsGallery() {
             <div className="text-gray-400 text-xs">{item.description}</div>
           </div>
         </div>
-        <motion.div animate={{ x: hoveredItem === item.id ? 4 : 0 }} transition={{ duration: 0.2 }}>
+        <motion.div
+          animate={{ x: hoveredItem === item.id ? 4 : 0 }}
+          transition={{ duration: 0.2 }}
+        >
           <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-white transition-colors duration-300" />
         </motion.div>
       </div>
     </motion.div>
-  )
+  );
 
   return (
     <section className="py-20 bg-gradient-to-b from-gray-900 via-black to-gray-900 relative overflow-hidden">
@@ -183,11 +188,13 @@ export default function IntegrationsGallery() {
           transition={{ duration: 0.6 }}
         >
           <div className="inline-block rounded-lg bg-blue-500/10 border border-blue-500/20 px-3 py-1 text-sm text-blue-400 mb-4">
-            Hub de Integraciones
+            {hero?.titulo1 ?? "Cargando..."}
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">{hero?.titulo ?? "Cargando..."}</h2>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+            {hero?.PrimerTitulo ?? "Cargando..."}
+          </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            {hero?.subtitulo ?? "Cargando..."}
+            {hero?.contenido ?? "Cargando..."}
           </p>
         </motion.div>
 
@@ -201,14 +208,18 @@ export default function IntegrationsGallery() {
             transition={{ duration: 0.6 }}
           >
             <div>
-              <div className="text-blue-400 text-sm font-medium mb-2">Popular en Empresas</div>
+              <div className="text-blue-400 text-sm font-medium mb-2">
+                {hero?.primerTextoAzul ?? "Cargando..."}
+              </div>
               <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 leading-tight">
-                {hero?.primerotituloblanco ?? "Cargando..."}
+                {hero?.textoBlanco ?? "Cargando..."}
                 <br />
-                <span className="text-blue-400">{hero?.segundotituloceleste ?? "Cargando..."}</span>
+                <span className="text-blue-400">
+                  {hero?.segundoTextoAzul ?? "Cargando..."}
+                </span>
               </h3>
               <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                {hero?.contenido ?? "Cargando..."}
+                {hero?.textoInformativo ?? "Cargando..."}
               </p>
             </div>
 
@@ -217,7 +228,12 @@ export default function IntegrationsGallery() {
               size="lg"
             >
               <span>Ir al Hub</span>
-              <motion.div className="ml-2" animate={{ x: 0 }} whileHover={{ x: 4 }} transition={{ duration: 0.2 }}>
+              <motion.div
+                className="ml-2"
+                animate={{ x: 0 }}
+                whileHover={{ x: 4 }}
+                transition={{ duration: 0.2 }}
+              >
                 <ExternalLink className="h-4 w-4" />
               </motion.div>
             </Button>
@@ -225,12 +241,12 @@ export default function IntegrationsGallery() {
             {/* Estadísticas */}
             <div className="grid grid-cols-2 gap-4 pt-6 border-t border-white/10">
               <div>
-                <div className="text-2xl font-bold text-white">200+</div>
-                <div className="text-xs text-gray-400">Integraciones</div>
+                <div className="text-2xl font-bold text-white">{hero?.numeroIntegraciones ?? "Cargando..."}</div>
+                <div className="text-xs text-gray-400">{hero?.integraciones ?? "Cargando..."}</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-white">99.9%</div>
-                <div className="text-xs text-gray-400">Tiempo Activo</div>
+                <div className="text-2xl font-bold text-white">{hero?.numeroTiempoActivo ?? "Cargando..."}</div>
+                <div className="text-xs text-gray-400">{hero?.tiempoactivo ?? "Cargando..."}</div>
               </div>
             </div>
           </motion.div>
@@ -248,12 +264,18 @@ export default function IntegrationsGallery() {
                   <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center">
                     <div className="w-3 h-3 rounded-full bg-green-500"></div>
                   </div>
-                  <h4 className="text-lg font-semibold text-white">Principales Integraciones</h4>
+                  <h4 className="text-lg font-semibold text-white">
+                    Principales Integraciones
+                  </h4>
                 </div>
 
                 <div className="space-y-1">
                   {topIntegrations.map((integration, index) => (
-                    <IntegrationItem key={integration.id} item={integration} index={index} />
+                    <IntegrationItem
+                      key={integration.id}
+                      item={integration}
+                      index={index}
+                    />
                   ))}
                 </div>
 
@@ -280,12 +302,18 @@ export default function IntegrationsGallery() {
                   <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
                     <div className="w-3 h-3 rounded-full bg-purple-500"></div>
                   </div>
-                  <h4 className="text-lg font-semibold text-white">Principales Proveedores LLM</h4>
+                  <h4 className="text-lg font-semibold text-white">
+                    Principales Proveedores LLM
+                  </h4>
                 </div>
 
                 <div className="space-y-1">
                   {topLLMProviders.map((provider, index) => (
-                    <IntegrationItem key={provider.id} item={provider} index={index} />
+                    <IntegrationItem
+                      key={provider.id}
+                      item={provider}
+                      index={index}
+                    />
                   ))}
                 </div>
 
@@ -310,12 +338,15 @@ export default function IntegrationsGallery() {
         >
           <div className="inline-flex items-center gap-2 text-sm text-gray-400">
             <span>¿Necesitas una integración personalizada?</span>
-            <a href="#contact" className="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-200">
+            <a
+              href="#contact"
+              className="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-200"
+            >
               Contacta a nuestro equipo
             </a>
           </div>
         </motion.div>
       </div>
     </section>
-  )
+  );
 }

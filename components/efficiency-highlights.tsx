@@ -1,4 +1,4 @@
-"use client";
+/*"use client";
 
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
@@ -233,8 +233,8 @@ export default function EfficiencyHighlights() {
                     </div>
                   </div>
 
-                  {/* Gradiente de fondo animado */}
-                  <motion.div
+                  {/* Gradiente de fondo animado */
+                 {/* <motion.div
                     className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300"
                     style={{
                       background: `linear-gradient(135deg, ${
@@ -246,7 +246,7 @@ export default function EfficiencyHighlights() {
                   />
 
                   {/* Animación de pulso al hacer hover */}
-                  <motion.div
+                  {/*<motion.div
                     className="absolute inset-0 rounded-lg border-2 border-transparent"
                     whileHover={{
                       borderColor: `${
@@ -277,7 +277,7 @@ export default function EfficiencyHighlights() {
         </motion.div>
 
         {/* Barra de estadísticas adicionales */}
-        <motion.div
+        {/*<motion.div
           className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -311,3 +311,5 @@ export default function EfficiencyHighlights() {
     </section>
   );
 }
+
+*/}

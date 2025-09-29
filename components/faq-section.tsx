@@ -6,24 +6,25 @@ import { ChevronDown, HelpCircle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface Hero {
-  titulo: string;
-  subtitulo: string;
-  pregunta1: string;
-  respuesta1: string;
-  pregunta2: string;
-  respuesta2: string;
-  pregunta3: string;
-  respuesta3: string;
-  pregunta4: string;
-  respuesta4: string;
-  pregunta5: string;
-  respuesta5: string;
-  pregunta6: string;
-  respuesta6: string;
-  pregunta7: string;
-  respuesta7: string;
-  pregunta8: string;
-  respuesta8: string;
+  FAQ: string;
+  PrimerTitulo:string;
+  contenido:string;
+  pregunta1:string;
+  respuesta1:string;
+  pregunta2:string;
+  respuesta2:string;
+  pregunta3:string;
+  respuesta3:string;
+  pregunta4:string;
+  respuesta4:string;
+  pregunta5:string;
+  respuesta5:string;
+  pregunta6:string;
+  respuesta6:string;
+  pregunta7:string;
+  respuesta7:string;
+  pregunta8:string;
+  respuesta8:string;
 }
 
 
@@ -38,7 +39,7 @@ export default function FAQSection() {
   const [hero, setHero] = useState<Hero | null>(null);
   
     useEffect(() => {
-      fetch("http://35.238.156.185:1337/api/eightsection", { cache: "no-store" })
+      fetch("http://34.170.207.129:1337/api/septimo-contenedor", { cache: "no-store" })
         .then((res) => res.json())
         .then((json) => {
           console.log(" JSON recibido:", json);
@@ -129,14 +130,13 @@ export default function FAQSection() {
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground mb-2">
               <HelpCircle className="h-4 w-4" />
-              FAQ
+              {hero?.FAQ ?? "Esperando subtítulo..."}
             </div>
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              Preguntas Frecuentes
+              {hero?.PrimerTitulo ?? "Esperando subtítulo..."}
             </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-              Obtén respuestas a preguntas comunes sobre nuestra plataforma IA
-              empresarial, implementación y soporte.
+              {hero?.contenido ?? "Esperando subtítulo..."}
             </p>
           </div>
         </motion.div>
