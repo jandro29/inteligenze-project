@@ -50,7 +50,7 @@ export default function UseCases() {
       try {
         console.log("🔄 Llamando a Strapi...");
         const res = await fetch(
-          "https://34.170.207.129:1337/api/cuarto-contenido",
+          "http://34.170.207.129:1337/api/cuarto-contenido",
           {
             cache: "no-store",
           }

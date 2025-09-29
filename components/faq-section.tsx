@@ -189,15 +189,7 @@ export default function FAQSection() {
   return (
     <section className="py-20 bg-gradient-to-b from-background to-muted/30 dark:from-background dark:to-muted/10">
       <div className="container px-4 md:px-6">
-        {/* Indicador de origen de datos */}
-        {usingFallback && (
-          <div className="mb-4 text-center">
-            <div className="inline-flex items-center gap-2 rounded-lg bg-yellow-500 px-3 py-1 text-sm text-white">
-              <span>⚠️ Modo offline - Mostrando datos locales</span>
-            </div>
-          </div>
-        )}
-
+        
         <motion.div
           className="flex flex-col items-center justify-center space-y-4 text-center mb-12"
           initial={{ opacity: 0, y: 20 }}
