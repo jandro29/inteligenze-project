@@ -17,10 +17,6 @@ import {
   LegalIcon,
   EducationIcon,
 } from "@/components/use-case-icons";
-import { useEffect, useState } from "react";
-
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
 
 interface Hero {
   titulo1: string;
@@ -40,64 +36,11 @@ interface Hero {
   contenidosextocuadro: string;
 }
 
-export default function UseCases() {
-  const [hero, setHero] = useState<Hero | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface AnimatedUseCasesProps {
+  hero: Hero;
+}
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        console.log("🔄 Llamando a Strapi...");
-        const res = await fetch(
-          "http://34.170.207.129:1337/api/cuarto-contenido",
-          {
-            cache: "no-store",
-          }
-        );
-
-        if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
-
-        const json = await res.json();
-        console.log("📦 JSON recibido:", json);
-
-        // ✅ Adaptado a tu respuesta real
-        if (json?.data) {
-          setHero(json.data);
-        } else {
-          throw new Error("⚠️ Estructura inesperada en la API");
-        }
-      } catch (err: any) {
-        console.error("❌ Error al traer data de Strapi:", err);
-        setError(err.message || "Error al cargar contenido");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (loading) {
-    return <p className="text-center py-20">⏳ Cargando contenido...</p>;
-  }
-
-  if (error) {
-    return (
-      <p className="text-center py-20 text-red-500">
-        ❌ No se pudo cargar el contenido: {error}
-      </p>
-    );
-  }
-
-  if (!hero) {
-    return (
-      <p className="text-center py-20 text-yellow-500">
-        ⚠️ No se encontró información para mostrar.
-      </p>
-    );
-  }
-
+export default function AnimatedUseCases({ hero }: AnimatedUseCasesProps) {
   const useCases = [
     {
       icon: <BuildingIcon />,
@@ -114,7 +57,7 @@ export default function UseCases() {
     {
       icon: <FinanceIcon />,
       title: hero.titulotercercuadro,
-      description: hero.contenidotercercuadro, // ⚠️ corregido
+      description: hero.contenidotercercuadro,
       accentColor: "rgba(245, 158, 11, 0.5)",
     },
     {
