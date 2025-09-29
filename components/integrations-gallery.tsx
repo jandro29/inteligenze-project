@@ -29,7 +29,7 @@ export default function IntegrationsGallery() {
   const [hero, setHero] = useState<Hero | null>(null);
 
   useEffect(() => {
-    fetch("http://35.238.156.185:1337/api/sexto-contenedor", {
+    fetch("https://35.238.156.185:1337/api/sexto-contenedor", {
       cache: "no-store",
     })
       .then((res) => res.json())
