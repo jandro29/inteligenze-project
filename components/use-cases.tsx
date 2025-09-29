@@ -19,9 +19,6 @@ import {
 } from "@/components/use-case-icons";
 import { useEffect, useState } from "react";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
 interface Hero {
   titulo1: string;
   PrimerTitulo: string;
@@ -40,36 +37,60 @@ interface Hero {
   contenidosextocuadro: string;
 }
 
+// ✅ DATOS DE RESPALDO (los mismos de tu Strapi)
+const fallbackData: Hero = {
+  titulo1: "Casos de Uso",
+  PrimerTitulo: "Transformando Industrias",
+  contenido: "Nuestra plataforma IA está diseñada para enfrentar los desafíos únicos de varios sectores.",
+  tituloprimercuadro: "Minería",
+  contenidoprimercuadro: "Transferencia de conocimiento entre ingenieros, operarios y contratistas de manera ágil. Reportes de sostebilidadautomatizados para auditores y entidades regulatorias",
+  titulosegundocuadro: " Manufactura e Ingeniería",
+  contenidosegundocuadro: "Procedimientos operativos estándar (SOP) dinámicos y fáciles de seguir. Manuales de producto que se actualizan automáticamente. Documentación de mantenimiento predictivo para maquinaria",
+  titulotercercuadro: "Legal y Consultoría",
+  contenidotercercuadro: "Documentos legales y compliance siempre en orden. Asistentes IA que ayudan a navegar cláusulas y regulaciones. Repositorios de conocimiento seguro para clientes y equipos.",
+  titulocuartocuadro: "Tecnología y Software",
+  contenidocuartocuadro: "Documentación técnica para APIs y SDKs, actualizada en segundos. Guías interactivas con asistentes IA para desarrolladores. Colaboración ágil entre producto y soporte.",
+  tituloquintocuadro: "Retail y E-commerce",
+  contenidoquintocuadro: "Documentación de productos actualizada al instante. Guías interactivas de autoservicio para clientes. Conocimiento compartido entre soporte, ventas y logística.",
+  titulosextocuadro: "Banca y Finanzas",
+  contenidosextocuadro: "Manuales internos seguros con acceso basado en roles. Flujos automatizados para cumplir normativas (AML, GDPR, Basilea). Soporte a clientes con documentación conversacional en tiempo real.",
+};
+
 export default function UseCases() {
   const [hero, setHero] = useState<Hero | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [usingFallback, setUsingFallback] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("🔄 Llamando a Strapi...");
-        const res = await fetch(
-          "http://34.170.207.129:1337/api/cuarto-contenido",
-          {
-            cache: "no-store",
-          }
-        );
+        setLoading(true);
+        console.log('🔄 Intentando conectar con Strapi...');
+        
+        // ✅ PRIMERO INTENTA CON STRAPI (usa HTTP, no HTTPS)
+        const response = await fetch("http://34.170.207.129:1337/api/cuarto-contenido", { 
+          cache: "no-store",
+        });
 
-        if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
-
-        const json = await res.json();
-        console.log("📦 JSON recibido:", json);
-
-        // ✅ Adaptado a tu respuesta real
-        if (json?.data) {
-          setHero(json.data);
-        } else {
-          throw new Error("⚠️ Estructura inesperada en la API");
+        if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status}`);
         }
-      } catch (err: any) {
-        console.error("❌ Error al traer data de Strapi:", err);
-        setError(err.message || "Error al cargar contenido");
+
+        const json = await response.json();
+        console.log("✅ Datos obtenidos de Strapi:", json);
+        
+        if (json.data) {
+          setHero(json.data);
+          setUsingFallback(false);
+        } else {
+          throw new Error("Estructura de datos inválida");
+        }
+        
+      } catch (error) {
+        console.error("❌ Error con Strapi, usando datos de respaldo:", error);
+        // ✅ SI FALLA STRAPI, USA LOS DATOS ESTÁTICOS
+        setHero(fallbackData);
+        setUsingFallback(true);
       } finally {
         setLoading(false);
       }
@@ -79,14 +100,24 @@ export default function UseCases() {
   }, []);
 
   if (loading) {
-    return <p className="text-center py-20">⏳ Cargando contenido...</p>;
-  }
-
-  if (error) {
     return (
-      <p className="text-center py-20 text-red-500">
-        ❌ No se pudo cargar el contenido: {error}
-      </p>
+      <section className="py-20 bg-gradient-to-b from-background to-muted/30 dark:from-background dark:to-muted/10">
+        <div className="container px-4 md:px-6">
+          <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
+            <div className="space-y-2">
+              <div className="inline-block rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground mb-2">
+                Conectando con Strapi...
+              </div>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                Cargando Casos de Uso
+              </h2>
+              <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
+                Obteniendo la información más reciente desde nuestro servidor
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
     );
   }
 
@@ -114,7 +145,7 @@ export default function UseCases() {
     {
       icon: <FinanceIcon />,
       title: hero.titulotercercuadro,
-      description: hero.contenidotercercuadro, // ⚠️ corregido
+      description: hero.contenidotercercuadro,
       accentColor: "rgba(245, 158, 11, 0.5)",
     },
     {
@@ -140,6 +171,15 @@ export default function UseCases() {
   return (
     <section className="py-20 bg-gradient-to-b from-background to-muted/30 dark:from-background dark:to-muted/10">
       <div className="container px-4 md:px-6">
+        {/* Indicador de origen de datos */}
+        {usingFallback && (
+          <div className="mb-4 text-center">
+            <div className="inline-flex items-center gap-2 rounded-lg bg-yellow-500 px-3 py-1 text-sm text-white">
+              <span>⚠️ Modo offline - Mostrando datos locales</span>
+            </div>
+          </div>
+        )}
+
         <motion.div
           className="flex flex-col items-center justify-center space-y-4 text-center mb-12"
           initial={{ opacity: 0, y: 20 }}
