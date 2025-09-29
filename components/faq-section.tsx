@@ -35,47 +35,55 @@ export default function FAQSection() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        console.log('🔄 Intentando conectar con Strapi...');
+        console.log('🔄 Conectando con Strapi via HTTPS...');
         
-        // Datos de ejemplo como fallback inmediato
-        const datosEjemplo: Hero = {
-          FAQ: "Preguntas Frecuentes",
-          PrimerTitulo: "¿Tienes preguntas? Tenemos respuestas",
-          contenido: "Encuentra soluciones a las consultas más comunes sobre nuestra plataforma de IA",
-          pregunta1: "¿Qué es Inteligence y cómo puede ayudar a mi empresa?",
-          respuesta1: "Inteligence es una plataforma de IA empresarial que transforma cómo las organizaciones manejan el conocimiento, automatizan procesos y mejoran la experiencia del cliente mediante agentes de IA personalizables.",
-          pregunta2: "¿Cómo se integra con nuestros sistemas existentes?",
-          respuesta2: "Ofrecemos APIs RESTful, SDKs para múltiples lenguajes, y conectores preconstruidos para sistemas populares como Salesforce, Slack, Microsoft Teams, y bases de datos SQL/NoSQL.",
-          pregunta3: "¿Qué nivel de personalización ofrecen?",
-          respuesta3: "Personalización completa: desde la creación de agentes de IA específicos para cada departamento, hasta la integración con tus flujos de trabajo existentes y branding corporativo.",
-          pregunta4: "¿Cómo garantizan la seguridad de nuestros datos?",
-          respuesta4: "Implementamos encriptación end-to-end, cumplimiento con GDPR/HIPAA, aislamiento de datos por cliente, y auditorías de seguridad regulares. Todos los datos se procesan en infraestructura certificada SOC2.",
-          pregunta5: "¿Qué tipo de soporte y capacitación incluye?",
-          respuesta5: "Soporte técnico 24/7, documentación completa, sesiones de capacitación personalizadas, y un equipo de éxito del cliente dedicado para garantizar una implementación exitosa.",
-          pregunta6: "¿Es escalable para empresas de diferentes tamaños?",
-          respuesta6: "Sí, nuestra arquitectura escala desde startups hasta Fortune 500. Ofrecemos planes flexibles que crecen con tu organización sin interrupciones del servicio.",
-          pregunta7: "¿Qué diferencia a Inteligence de otras plataformas de IA?",
-          respuesta7: "Combinamos capacidades avanzadas de LLM con herramientas de gestión de conocimiento empresarial, integración profunda con sistemas existentes, y un enfoque en ROI medible desde el primer día.",
-          pregunta8: "¿Cómo podemos empezar y qué incluye la prueba?",
-          respuesta8: "Inicia con una consultoría gratuita, seguida de una prueba de 14 días con acceso completo a todas las features, implementación asistida y reportes personalizados de métricas de impacto."
-        };
+        // ✅ AHORA CON HTTPS - usa el puerto 443
+        const response = await fetch("http://34.170.207.129/api/septimo-contenedor", {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          cache: "no-store"
+        });
 
-        // Intenta conectar con Strapi pero usa datos de ejemplo si falla
-        try {
-          const response = await fetch("http://34.170.207.129:1337/api/septimo-contenedor", {
-            mode: 'no-cors',
-            cache: "no-cache",
-          });
-          console.log('📡 Strapi response type:', response.type);
-        } catch (error) {
-          console.log('⚠️ Strapi no disponible, usando datos de ejemplo');
+        console.log('📡 Response status:', response.status);
+        console.log('📡 Response ok:', response.ok);
+
+        if (!response.ok) {
+          throw new Error(`Error HTTP ${response.status}: ${response.statusText}`);
         }
 
-        // Usar datos de ejemplo inmediatamente
-        setHero(datosEjemplo);
+        const json = await response.json();
+        console.log("✅ Datos recibidos de Strapi:", json);
         
+        if (json.data && json.data.attributes) {
+          setHero(json.data.attributes);
+        } else if (json.data) {
+          setHero(json.data);
+        } else {
+          console.log("❌ Estructura inesperada:", json);
+        }
       } catch (err) {
-        console.error("❌ Error:", err);
+        console.error("❌ Error fetching desde Strapi:", err);
+        
+        // Intento alternativo con HTTP en caso de que HTTPS falle
+        try {
+          console.log('🔄 Intentando con HTTP como fallback...');
+          const fallbackResponse = await fetch("http://34.170.207.129:1337/api/septimo-contenedor", {
+            cache: "no-store"
+          });
+          
+          if (fallbackResponse.ok) {
+            const fallbackJson = await fallbackResponse.json();
+            console.log("✅ Datos recibidos via HTTP fallback:", fallbackJson);
+            if (fallbackJson.data) {
+              setHero(fallbackJson.data);
+            }
+          }
+        } catch (fallbackError) {
+          console.error("❌ Fallback también falló:", fallbackError);
+        }
       } finally {
         setLoading(false);
       }
@@ -86,15 +94,40 @@ export default function FAQSection() {
 
   const [openItems, setOpenItems] = useState<number[]>([0]);
 
+  // Datos de fallback solo si no hay datos de Strapi
   const faqs = hero ? [
-    { question: hero.pregunta1, answer: hero.respuesta1 },
-    { question: hero.pregunta2, answer: hero.respuesta2 },
-    { question: hero.pregunta3, answer: hero.respuesta3 },
-    { question: hero.pregunta4, answer: hero.respuesta4 },
-    { question: hero.pregunta5, answer: hero.respuesta5 },
-    { question: hero.pregunta6, answer: hero.respuesta6 },
-    { question: hero.pregunta7, answer: hero.respuesta7 },
-    { question: hero.pregunta8, answer: hero.respuesta8 },
+    { 
+      question: hero.pregunta1 || "¿Qué es Inteligence?", 
+      answer: hero.respuesta1 || "Plataforma de IA empresarial para transformar tu organización." 
+    },
+    { 
+      question: hero.pregunta2 || "¿Cómo funciona la integración?", 
+      answer: hero.respuesta2 || "Ofrecemos APIs flexibles y conectores preconstruidos." 
+    },
+    { 
+      question: hero.pregunta3 || "¿Qué seguridad ofrece?", 
+      answer: hero.respuesta3 || "Cifrado de nivel bancario y cumplimiento SOC 2." 
+    },
+    { 
+      question: hero.pregunta4 || "¿Es escalable?", 
+      answer: hero.respuesta4 || "Sí, crece con tu organización sin interrupciones." 
+    },
+    { 
+      question: hero.pregunta5 || "¿Qué soporte incluye?", 
+      answer: hero.respuesta5 || "Soporte técnico 24/7 y capacitación personalizada." 
+    },
+    { 
+      question: hero.pregunta6 || "¿Hay prueba gratuita?", 
+      answer: hero.respuesta6 || "Sí, prueba de 14 días con todas las funciones." 
+    },
+    { 
+      question: hero.pregunta7 || "¿Cómo se factura?", 
+      answer: hero.respuesta7 || "Planes flexibles según uso mensual o anual." 
+    },
+    { 
+      question: hero.pregunta8 || "¿Puedo migrar mis datos?", 
+      answer: hero.respuesta8 || "Sí, nuestro equipo ayuda en la migración completa." 
+    },
   ] : [];
 
   const toggleItem = (index: number) => {
@@ -136,11 +169,14 @@ export default function FAQSection() {
             <div className="space-y-2">
               <div className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground mb-2">
                 <HelpCircle className="h-4 w-4" />
-                Cargando...
+                Conectando con Strapi...
               </div>
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                Cargando preguntas frecuentes...
+                Cargando contenido dinámico
               </h2>
+              <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
+                Los datos se cargarán automáticamente desde tu panel de Strapi
+              </p>
             </div>
           </div>
         </div>
@@ -167,7 +203,7 @@ export default function FAQSection() {
               {hero?.PrimerTitulo || "Preguntas Frecuentes"}
             </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-              {hero?.contenido || "Encuentra respuestas a las preguntas más comunes"}
+              {hero?.contenido || "Encuentra respuestas a las preguntas más comunes sobre nuestra plataforma"}
             </p>
           </div>
         </motion.div>
@@ -179,61 +215,67 @@ export default function FAQSection() {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
-          {faqs.map((faq, index) => (
-            <motion.div key={index} variants={itemVariants}>
-              <Card className="overflow-hidden bg-background/60 backdrop-blur-sm border transition-all duration-300 hover:shadow-lg dark:bg-background/80">
-                <motion.button
-                  className="w-full text-left focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-lg"
-                  onClick={() => toggleItem(index)}
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                >
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold pr-4 leading-relaxed">
-                        {faq.question}
-                      </h3>
-                      <motion.div
-                        animate={{
-                          rotate: openItems.includes(index) ? 180 : 0,
-                        }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="flex-shrink-0"
-                      >
-                        <ChevronDown className="h-5 w-5 text-muted-foreground" />
-                      </motion.div>
-                    </div>
-                  </CardContent>
-                </motion.button>
-
-                <AnimatePresence>
-                  {openItems.includes(index) && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className="overflow-hidden"
-                    >
-                      <CardContent className="px-6 pb-6 pt-0">
+          {faqs.length > 0 ? (
+            faqs.map((faq, index) => (
+              <motion.div key={index} variants={itemVariants}>
+                <Card className="overflow-hidden bg-background/60 backdrop-blur-sm border transition-all duration-300 hover:shadow-lg dark:bg-background/80">
+                  <motion.button
+                    className="w-full text-left focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-lg"
+                    onClick={() => toggleItem(index)}
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                  >
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-lg font-semibold pr-4 leading-relaxed">
+                          {faq.question}
+                        </h3>
                         <motion.div
-                          initial={{ y: -10, opacity: 0 }}
-                          animate={{ y: 0, opacity: 1 }}
-                          exit={{ y: -10, opacity: 0 }}
-                          transition={{ duration: 0.2, delay: 0.1 }}
-                          className="border-t pt-4"
+                          animate={{
+                            rotate: openItems.includes(index) ? 180 : 0,
+                          }}
+                          transition={{ duration: 0.3, ease: "easeInOut" }}
+                          className="flex-shrink-0"
                         >
-                          <p className="text-muted-foreground leading-relaxed">
-                            {faq.answer}
-                          </p>
+                          <ChevronDown className="h-5 w-5 text-muted-foreground" />
                         </motion.div>
-                      </CardContent>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </Card>
-            </motion.div>
-          ))}
+                      </div>
+                    </CardContent>
+                  </motion.button>
+
+                  <AnimatePresence>
+                    {openItems.includes(index) && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                      >
+                        <CardContent className="px-6 pb-6 pt-0">
+                          <motion.div
+                            initial={{ y: -10, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: -10, opacity: 0 }}
+                            transition={{ duration: 0.2, delay: 0.1 }}
+                            className="border-t pt-4"
+                          >
+                            <p className="text-muted-foreground leading-relaxed">
+                              {faq.answer}
+                            </p>
+                          </motion.div>
+                        </CardContent>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </Card>
+              </motion.div>
+            ))
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">No se pudieron cargar las preguntas frecuentes.</p>
+            </div>
+          )}
         </motion.div>
 
         <motion.div
