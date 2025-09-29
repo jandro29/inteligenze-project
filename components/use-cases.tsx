@@ -67,7 +67,7 @@ export default async function UseCases() {
     {
       icon: <FinanceIcon />,
       title: hero?.titulotercercuadro ?? "Cargando...",
-      description: hero?.contenidotercuadro ?? "Esperando contenido...",
+      description: hero?.contenidocuartocuadro ?? "Esperando contenido...",
       accentColor: "rgba(245, 158, 11, 0.5)",
     },
     {
