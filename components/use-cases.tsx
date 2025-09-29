@@ -56,9 +56,9 @@ export default function UseCases() {
         const json = await res.json();
         console.log("📦 JSON recibido:", json);
 
-        // ✅ Tu Strapi devuelve los datos en "data"
-        if (json?.data) {
-          setHero(json.data);
+        // ⚡ Acceder correctamente a data.attributes
+        if (json?.data?.attributes) {
+          setHero(json.data.attributes);
         } else {
           console.warn("⚠️ Estructura inesperada en la API:", json);
         }
