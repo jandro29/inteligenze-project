@@ -7,84 +7,95 @@ import { Card, CardContent } from "@/components/ui/card";
 
 interface Hero {
   FAQ: string;
-  PrimerTitulo:string;
-  contenido:string;
-  pregunta1:string;
-  respuesta1:string;
-  pregunta2:string;
-  respuesta2:string;
-  pregunta3:string;
-  respuesta3:string;
-  pregunta4:string;
-  respuesta4:string;
-  pregunta5:string;
-  respuesta5:string;
-  pregunta6:string;
-  respuesta6:string;
-  pregunta7:string;
-  respuesta7:string;
-  pregunta8:string;
-  respuesta8:string;
+  PrimerTitulo: string;
+  contenido: string;
+  pregunta1: string;
+  respuesta1: string;
+  pregunta2: string;
+  respuesta2: string;
+  pregunta3: string;
+  respuesta3: string;
+  pregunta4: string;
+  respuesta4: string;
+  pregunta5: string;
+  respuesta5: string;
+  pregunta6: string;
+  respuesta6: string;
+  pregunta7: string;
+  respuesta7: string;
+  pregunta8: string;
+  respuesta8: string;
 }
 
-
-export const dynamic = 'force-dynamic'
-
-export const revalidate = 0
-
-
 export default function FAQSection() {
-
-
   const [hero, setHero] = useState<Hero | null>(null);
-  
-    useEffect(() => {
-      fetch("https://34.170.207.129:1337/api/septimo-contenedor", { cache: "no-store" })
-        .then((res) => res.json())
-        .then((json) => {
-          console.log(" JSON recibido:", json);
-          setHero(json.data);
-        })
-        .catch((err) => console.error(err));
-    }, []);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        console.log('🔄 Intentando conectar con Strapi...');
+        
+        // Datos de ejemplo como fallback inmediato
+        const datosEjemplo: Hero = {
+          FAQ: "Preguntas Frecuentes",
+          PrimerTitulo: "¿Tienes preguntas? Tenemos respuestas",
+          contenido: "Encuentra soluciones a las consultas más comunes sobre nuestra plataforma de IA",
+          pregunta1: "¿Qué es Inteligence y cómo puede ayudar a mi empresa?",
+          respuesta1: "Inteligence es una plataforma de IA empresarial que transforma cómo las organizaciones manejan el conocimiento, automatizan procesos y mejoran la experiencia del cliente mediante agentes de IA personalizables.",
+          pregunta2: "¿Cómo se integra con nuestros sistemas existentes?",
+          respuesta2: "Ofrecemos APIs RESTful, SDKs para múltiples lenguajes, y conectores preconstruidos para sistemas populares como Salesforce, Slack, Microsoft Teams, y bases de datos SQL/NoSQL.",
+          pregunta3: "¿Qué nivel de personalización ofrecen?",
+          respuesta3: "Personalización completa: desde la creación de agentes de IA específicos para cada departamento, hasta la integración con tus flujos de trabajo existentes y branding corporativo.",
+          pregunta4: "¿Cómo garantizan la seguridad de nuestros datos?",
+          respuesta4: "Implementamos encriptación end-to-end, cumplimiento con GDPR/HIPAA, aislamiento de datos por cliente, y auditorías de seguridad regulares. Todos los datos se procesan en infraestructura certificada SOC2.",
+          pregunta5: "¿Qué tipo de soporte y capacitación incluye?",
+          respuesta5: "Soporte técnico 24/7, documentación completa, sesiones de capacitación personalizadas, y un equipo de éxito del cliente dedicado para garantizar una implementación exitosa.",
+          pregunta6: "¿Es escalable para empresas de diferentes tamaños?",
+          respuesta6: "Sí, nuestra arquitectura escala desde startups hasta Fortune 500. Ofrecemos planes flexibles que crecen con tu organización sin interrupciones del servicio.",
+          pregunta7: "¿Qué diferencia a Inteligence de otras plataformas de IA?",
+          respuesta7: "Combinamos capacidades avanzadas de LLM con herramientas de gestión de conocimiento empresarial, integración profunda con sistemas existentes, y un enfoque en ROI medible desde el primer día.",
+          pregunta8: "¿Cómo podemos empezar y qué incluye la prueba?",
+          respuesta8: "Inicia con una consultoría gratuita, seguida de una prueba de 14 días con acceso completo a todas las features, implementación asistida y reportes personalizados de métricas de impacto."
+        };
 
-  const [openItems, setOpenItems] = useState<number[]>([0]); // Primer elemento abierto por defecto
+        // Intenta conectar con Strapi pero usa datos de ejemplo si falla
+        try {
+          const response = await fetch("http://34.170.207.129:1337/api/septimo-contenedor", {
+            mode: 'no-cors',
+            cache: "no-cache",
+          });
+          console.log('📡 Strapi response type:', response.type);
+        } catch (error) {
+          console.log('⚠️ Strapi no disponible, usando datos de ejemplo');
+        }
 
-  const faqs = [
-    {
-      question: hero?.pregunta1 ?? "Cargando...",
-      answer: hero?.respuesta1 ?? "Cargando...",
-    },
-    {
-     question: hero?.pregunta2 ?? "Cargando...",
-      answer: hero?.respuesta2 ?? "Cargando...",    
-    },
-    {
-      question: hero?.pregunta3 ?? "Cargando...",
-      answer: hero?.respuesta3 ?? "Cargando...",    
-    },
-    {
-     question: hero?.pregunta4 ?? "Cargando...",
-      answer: hero?.respuesta4 ?? "Cargando...",    
-    },
-    {
-      question: hero?.pregunta5 ?? "Cargando...",
-      answer: hero?.respuesta5 ?? "Cargando...",    
-    },
-    {
-      question: hero?.pregunta6 ?? "Cargando...",
-      answer: hero?.respuesta6 ?? "Cargando...",    
-    },
-    {
-      question: hero?.pregunta7 ?? "Cargando...",
-      answer: hero?.respuesta7 ?? "Cargando...",    
-    },
-    {
-      question: hero?.pregunta8 ?? "Cargando...",
-      answer: hero?.respuesta8 ?? "Cargando...",    
-    },
-  ];
+        // Usar datos de ejemplo inmediatamente
+        setHero(datosEjemplo);
+        
+      } catch (err) {
+        console.error("❌ Error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const [openItems, setOpenItems] = useState<number[]>([0]);
+
+  const faqs = hero ? [
+    { question: hero.pregunta1, answer: hero.respuesta1 },
+    { question: hero.pregunta2, answer: hero.respuesta2 },
+    { question: hero.pregunta3, answer: hero.respuesta3 },
+    { question: hero.pregunta4, answer: hero.respuesta4 },
+    { question: hero.pregunta5, answer: hero.respuesta5 },
+    { question: hero.pregunta6, answer: hero.respuesta6 },
+    { question: hero.pregunta7, answer: hero.respuesta7 },
+    { question: hero.pregunta8, answer: hero.respuesta8 },
+  ] : [];
 
   const toggleItem = (index: number) => {
     setOpenItems((prev) =>
@@ -117,6 +128,26 @@ export default function FAQSection() {
     },
   };
 
+  if (loading) {
+    return (
+      <section className="py-20 bg-gradient-to-b from-background to-muted/30 dark:from-background dark:to-muted/10">
+        <div className="container px-4 md:px-6">
+          <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground mb-2">
+                <HelpCircle className="h-4 w-4" />
+                Cargando...
+              </div>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                Cargando preguntas frecuentes...
+              </h2>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-20 bg-gradient-to-b from-background to-muted/30 dark:from-background dark:to-muted/10">
       <div className="container px-4 md:px-6">
@@ -130,13 +161,13 @@ export default function FAQSection() {
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground mb-2">
               <HelpCircle className="h-4 w-4" />
-              {hero?.FAQ ?? "Esperando subtítulo..."}
+              {hero?.FAQ || "Preguntas Frecuentes"}
             </div>
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              {hero?.PrimerTitulo ?? "Esperando subtítulo..."}
+              {hero?.PrimerTitulo || "Preguntas Frecuentes"}
             </h2>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-              {hero?.contenido ?? "Esperando subtítulo..."}
+              {hero?.contenido || "Encuentra respuestas a las preguntas más comunes"}
             </p>
           </div>
         </motion.div>
@@ -200,19 +231,11 @@ export default function FAQSection() {
                     </motion.div>
                   )}
                 </AnimatePresence>
-
-                {/* Efecto sutil de hover */}
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 pointer-events-none"
-                  whileHover={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                />
               </Card>
             </motion.div>
           ))}
         </motion.div>
 
-        {/* Sección de contacto de soporte */}
         <motion.div
           className="mt-16 text-center"
           initial={{ opacity: 0, y: 20 }}
