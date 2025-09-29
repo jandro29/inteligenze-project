@@ -8,13 +8,16 @@ export async function GET(request: NextRequest) {
     const strapiUrl = process.env.STRAPI_URL || 'http://34.170.207.129:1337';
     const endpoint = request.nextUrl.searchParams.get('endpoint') || '';
     
-    console.log(`🔄 Proxy: Fetching from: ${strapiUrl}${endpoint}`);
+    const fullUrl = `${strapiUrl}${endpoint}`;
+    console.log(`🔄 Proxy: Fetching from: ${fullUrl}`);
     
-    const response = await fetch(`${strapiUrl}${endpoint}`, {
+    const response = await fetch(fullUrl, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
+      // @ts-ignore - Next.js specific cache option
       cache: 'no-store',
     });
 
@@ -30,8 +33,9 @@ export async function GET(request: NextRequest) {
     console.log(`✅ Proxy: Data received successfully`);
     
     return NextResponse.json(data, {
+      status: 200,
       headers: {
-        'Cache-Control': 'no-store, max-age=0',
+        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type',
@@ -44,7 +48,8 @@ export async function GET(request: NextRequest) {
       { 
         error: 'Failed to fetch from Strapi', 
         details: errorMessage,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        strapiUrl: process.env.STRAPI_URL || 'http://34.170.207.129:1337'
       },
       { status: 500 }
     );
@@ -53,6 +58,7 @@ export async function GET(request: NextRequest) {
 
 export async function OPTIONS() {
   return NextResponse.json({}, {
+    status: 200,
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, OPTIONS',
