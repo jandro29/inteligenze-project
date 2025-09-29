@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "framer-motion";
 import {
   Card,
@@ -21,42 +23,66 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 interface Hero {
-  titulo1: string;
-  PrimerTitulo: string;
-  contenido: string;
-  image1: ImageBitmap;
-  tituloprimercuadro: string;
-  contenidoprimercuadro: string;
-  image2: ImageBitmap;
-  titulosegundocuadro: string;
-  contenidosegundocuadro: string;
-  image3: ImageBitmap;
-  titulotercercuadro: string;
-  contenidotercercuadro: string;
-  image4: ImageBitmap;
-  titulocuartocuadro: string;
-  contenidocuartocuadro: string;
-  image5: ImageBitmap;
-  tituloquintocuadro: string;
-  contenidoquintocuadro: string;
-  image6: ImageBitmap;
-  titulosextocuadro: string;
-  contenidosextocuadro: string;
+  titulo1?: string;
+  PrimerTitulo?: string;
+  contenido?: string;
+  tituloprimercuadro?: string;
+  contenidoprimercuadro?: string;
+  titulosegundocuadro?: string;
+  contenidosegundocuadro?: string;
+  titulotercercuadro?: string;
+  contenidotercercuadro?: string;
+  titulocuartocuadro?: string;
+  contenidocuartocuadro?: string;
+  tituloquintocuadro?: string;
+  contenidoquintocuadro?: string;
+  titulosextocuadro?: string;
+  contenidosextocuadro?: string;
+  // campos extra que venga Strapi
+  [key: string]: any;
 }
 
 export default function UseCases() {
+  // uso any para evitar errores de tipado por imágenes u otros tipos
   const [hero, setHero] = useState<Hero | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("http://34.170.207.129:1337/api/cuarto-contenido?populate=*", {
-      cache: "no-store",
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        console.log("JSON recibido:", json);
-        setHero(json.data || null);
-      })
-      .catch((err) => console.error("Error al traer data de Strapi:", err));
+    async function load() {
+      try {
+        const res = await fetch("/api/cuarto-contenido", { cache: "no-store" });
+        if (!res.ok) {
+          const text = await res.text();
+          console.error("Respuesta no OK del proxy:", res.status, text);
+          setError(`Error ${res.status} al obtener contenido.`);
+          return;
+        }
+
+        const json = await res.json();
+        console.log("JSON recibido desde /api/cuarto-contenido:", json);
+
+        // Soportar ambos formatos:
+        // 1) { data: { attributes: { ... } } }  (Strapi clásico)
+        // 2) { data: { ... } } (tu caso actual)
+        const raw = json?.data ?? json;
+        const attrs = raw?.attributes ? raw.attributes : raw;
+
+        if (!attrs) {
+          console.warn("No se encontraron atributos en la respuesta:", json);
+          setError("No hay contenido disponible.");
+          setHero(null);
+        } else {
+          setHero(attrs);
+          setError(null);
+        }
+      } catch (err) {
+        console.error("Error al traer data de Strapi (proxy):", err);
+        setError("Error al conectar con el servidor.");
+        setHero(null);
+      }
+    }
+
+    load();
   }, []);
 
   const useCases = [
@@ -141,6 +167,10 @@ export default function UseCases() {
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
               {hero?.contenido ?? "Esperando subtítulo..."}
             </p>
+            {/** mostrar error si hay */}
+            {/** puedes quitar esto después */}
+            {/** @ts-ignore */}
+            {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
           </div>
         </motion.div>
 
