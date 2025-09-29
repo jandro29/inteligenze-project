@@ -44,29 +44,34 @@ export default function UseCases() {
   const [hero, setHero] = useState<Hero | null>(null);
 
   useEffect(() => {
-    fetch("http://34.170.207.129:1337/api/cuarto-contenido", {
-      cache: "no-store",
-    })
-      .then((res) => res.json())
-      .then((json) => {
+    const fetchData = async () => {
+      try {
+        console.log("🔄 Llamando a Strapi...");
+        const res = await fetch("http://34.170.207.129:1337/api/cuarto-contenido", {
+          cache: "no-store",
+        });
+
+        if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
+
+        const json = await res.json();
         console.log("📦 JSON recibido:", json);
 
-        // Caso 1: API devuelve los campos directo dentro de `data`
-        if (json?.data && !json?.data?.attributes) {
+        // ✅ Tu Strapi devuelve los datos en "data"
+        if (json?.data) {
           setHero(json.data);
-        }
-        // Caso 2: API devuelve los campos dentro de `attributes`
-        else if (json?.data?.attributes) {
-          setHero(json.data.attributes);
         } else {
-          console.warn("⚠️ Estructura inesperada en la API");
+          console.warn("⚠️ Estructura inesperada en la API:", json);
         }
-      })
-      .catch((err) => console.error("❌ Error al traer data de Strapi:", err));
+      } catch (err) {
+        console.error("❌ Error al traer data de Strapi:", err);
+      }
+    };
+
+    fetchData();
   }, []);
 
   if (!hero) {
-    return <p className="text-center py-20">Cargando contenido...</p>;
+    return <p className="text-center py-20">⏳ Cargando contenido...</p>;
   }
 
   const useCases = [
