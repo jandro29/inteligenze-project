@@ -11,11 +11,11 @@ import { useTheme } from "next-themes";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
-  const navItems = [
+  /*const navItems = [
     { label: "Características", href: "#features" },
     { label: "Casos de Uso", href: "#use-cases" },
     { label: "Contacto", href: "#contact" },
-  ];
+  ];*/
 
   const { theme } = useTheme();
 
@@ -45,7 +45,7 @@ export default function Navbar() {
           </Link>
         </div>
 
-        <nav className="hidden md:flex gap-6" aria-label="Navegación Principal">
+        {/* <nav className="hidden md:flex gap-6" aria-label="Navegación Principal">
           {navItems.map((item, index) => (
             <Link
               key={index}
@@ -55,7 +55,7 @@ export default function Navbar() {
               {item.label}
             </Link>
           ))}
-        </nav>
+        </nav> */}
 
         <div className="flex items-center gap-4">
           <ThemeToggle />
@@ -84,7 +84,7 @@ export default function Navbar() {
                 className="flex flex-col gap-4 mt-8"
                 aria-label="Navegación Móvil"
               >
-                {navItems.map((item, index) => (
+                {/* {navItems.map((item, index) => (
                   <Link
                     key={index}
                     href={item.href}
@@ -93,7 +93,7 @@ export default function Navbar() {
                   >
                     {item.label}
                   </Link>
-                ))}
+                ))} */}
                 <div className="flex items-center gap-4 mt-4">
                   <ThemeToggle />
                   <Button

@@ -105,9 +105,9 @@ export default async function Home() {
                   </div>
                 </Button>
                 </a>
-                <Button className="px-5 py-6 h-[60px] rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-[15px] font-medium text-foreground">
+                {/* <Button className="px-5 py-6 h-[60px] rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-[15px] font-medium text-foreground">
                   Saber Más
-                </Button>
+                </Button> */}
               </div>
             </div>
           </div>

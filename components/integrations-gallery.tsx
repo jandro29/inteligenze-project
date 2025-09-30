@@ -338,10 +338,10 @@ export default function IntegrationsGallery() {
                 </div>
 
                 <div className="mt-6 pt-4 border-t border-white/10">
-                  <button className="text-blue-400 text-sm hover:text-blue-300 transition-colors duration-300 flex items-center gap-2">
+                  {/* <button className="text-blue-400 text-sm hover:text-blue-300 transition-colors duration-300 flex items-center gap-2">
                     <span>Ver todas las integraciones</span>
                     <ArrowRight className="h-3 w-3" />
-                  </button>
+                  </button> */}
                 </div>
               </CardContent>
             </Card>
@@ -376,10 +376,10 @@ export default function IntegrationsGallery() {
                 </div>
 
                 <div className="mt-6 pt-4 border-t border-white/10">
-                  <button className="text-purple-400 text-sm hover:text-purple-300 transition-colors duration-300 flex items-center gap-2">
+                  {/* <button className="text-purple-400 text-sm hover:text-purple-300 transition-colors duration-300 flex items-center gap-2">
                     <span>Ver todos los proveedores</span>
                     <ArrowRight className="h-3 w-3" />
-                  </button>
+                  </button> */}
                 </div>
               </CardContent>
             </Card>

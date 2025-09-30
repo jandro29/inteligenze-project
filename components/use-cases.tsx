@@ -238,13 +238,13 @@ export default function IntegrationsGallery() {
 
       <div className="container px-4 md:px-6 relative z-10">
         {/* Indicador de origen de datos */}
-        {/* {usingFallback && (
+         {usingFallback && (
           <div className="mb-4 text-center">
             <div className="inline-flex items-center gap-2 rounded-lg bg-yellow-500 px-3 py-1 text-sm text-white">
               <span>⚠️ Modo offline - Mostrando datos por defecto</span>
             </div>
           </div>
-        )} */}
+        )} 
 
         <motion.div
           className="text-center mb-16"
@@ -346,10 +346,10 @@ export default function IntegrationsGallery() {
                 </div>
 
                 <div className="mt-6 pt-4 border-t border-white/10">
-                  <button className="text-blue-400 text-sm hover:text-blue-300 transition-colors duration-300 flex items-center gap-2">
+                  {/* <button className="text-blue-400 text-sm hover:text-blue-300 transition-colors duration-300 flex items-center gap-2">
                     <span>Ver todas las integraciones</span>
                     <ArrowRight className="h-3 w-3" />
-                  </button>
+                  </button> */}
                 </div>
               </CardContent>
             </Card>
@@ -384,10 +384,10 @@ export default function IntegrationsGallery() {
                 </div>
 
                 <div className="mt-6 pt-4 border-t border-white/10">
-                  <button className="text-purple-400 text-sm hover:text-purple-300 transition-colors duration-300 flex items-center gap-2">
+                  {/* <button className="text-purple-400 text-sm hover:text-purple-300 transition-colors duration-300 flex items-center gap-2">
                     <span>Ver todos los proveedores</span>
                     <ArrowRight className="h-3 w-3" />
-                  </button>
+                  </button> */}
                 </div>
               </CardContent>
             </Card>
