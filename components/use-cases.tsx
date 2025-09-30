@@ -289,21 +289,6 @@ export default function IntegrationsGallery() {
               </p>
             </div>
 
-            {/* <Button
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 group shadow-lg shadow-blue-600/25"
-              size="lg"
-            >
-              <span>Ir al Hub</span>
-              <motion.div
-                className="ml-2"
-                animate={{ x: 0 }}
-                whileHover={{ x: 4 }}
-                transition={{ duration: 0.2 }}
-              >
-                <ExternalLink className="h-4 w-4" />
-              </motion.div>
-            </Button> */}
-
             {/* Estadísticas */}
             <div className="grid grid-cols-2 gap-4 pt-6 border-t border-white/10">
               <div>
