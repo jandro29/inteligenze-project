@@ -168,15 +168,13 @@ export default function IntegrationsGallery() {
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      onHoverStart={() => setHoveredItem(item.id)}
-      onHoverEnd={() => setHoveredItem(null)}
+      
     >
       <div className="flex items-center justify-between p-4 rounded-xl transition-all duration-300 hover:bg-white/5 cursor-pointer border border-transparent hover:border-white/10">
         <div className="flex items-center gap-4">
           <motion.div
             className="w-10 h-10 rounded-lg flex items-center justify-center text-xl relative overflow-hidden"
             style={{ backgroundColor: `${item.color}20` }}
-            whileHover={{ scale: 1.1 }}
             transition={{ duration: 0.2 }}
           >
             <span className="relative z-10">{item.icon}</span>
@@ -184,7 +182,6 @@ export default function IntegrationsGallery() {
               className="absolute inset-0 rounded-lg"
               style={{ backgroundColor: item.color }}
               initial={{ opacity: 0 }}
-              whileHover={{ opacity: 0.1 }}
               transition={{ duration: 0.2 }}
             />
           </motion.div>
@@ -194,7 +191,6 @@ export default function IntegrationsGallery() {
           </div>
         </div>
         <motion.div
-          animate={{ x: hoveredItem === item.id ? 4 : 0 }}
           transition={{ duration: 0.2 }}
         >
           <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-white transition-colors duration-300" />
