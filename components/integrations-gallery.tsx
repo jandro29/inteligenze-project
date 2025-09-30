@@ -281,7 +281,7 @@ export default function IntegrationsGallery() {
               </p>
             </div>
 
-            <Button
+            {/* <Button
               className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 group shadow-lg shadow-blue-600/25"
               size="lg"
             >
@@ -294,7 +294,7 @@ export default function IntegrationsGallery() {
               >
                 <ExternalLink className="h-4 w-4" />
               </motion.div>
-            </Button>
+            </Button> */}
 
             {/* Estadísticas */}
             <div className="grid grid-cols-2 gap-4 pt-6 border-t border-white/10">
