@@ -181,9 +181,6 @@ export default async function Home() {
         {/* Testimonios */}
         <Testimonials />
 
-        {/* Destacados de Eficiencia */}
-        {/* <EfficiencyHighlights />*/}
-
         {/* Galería de Integraciones */}
         <IntegrationsGallery />
 
