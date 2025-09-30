@@ -13,6 +13,7 @@ import StructuredData from "@/components/structured-data";
 //import EfficiencyHighlights from "@/components/efficiency-highlights"
 import IntegrationsGallery from "@/components/integrations-gallery";
 import FAQSection from "@/components/faq-section";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 export const dynamic = "force-dynamic";
 
@@ -188,6 +189,9 @@ export default async function Home() {
 
         {/* Sección FAQ */}
         <FAQSection />
+
+        {/* Informacion de GoogleAnalytics */}
+        <GoogleAnalytics />
 
         {/* Sección de Contacto/Precios */}
         <section
