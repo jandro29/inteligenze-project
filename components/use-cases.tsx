@@ -238,13 +238,13 @@ export default function IntegrationsGallery() {
 
       <div className="container px-4 md:px-6 relative z-10">
         {/* Indicador de origen de datos */}
-         {usingFallback && (
+         {/* {usingFallback && (
           <div className="mb-4 text-center">
             <div className="inline-flex items-center gap-2 rounded-lg bg-yellow-500 px-3 py-1 text-sm text-white">
               <span>⚠️ Modo offline - Mostrando datos por defecto</span>
             </div>
           </div>
-        )} 
+        )}  */}
 
         <motion.div
           className="text-center mb-16"
@@ -289,7 +289,7 @@ export default function IntegrationsGallery() {
               </p>
             </div>
 
-            <Button
+            {/* <Button
               className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 group shadow-lg shadow-blue-600/25"
               size="lg"
             >
@@ -302,7 +302,7 @@ export default function IntegrationsGallery() {
               >
                 <ExternalLink className="h-4 w-4" />
               </motion.div>
-            </Button>
+            </Button> */}
 
             {/* Estadísticas */}
             <div className="grid grid-cols-2 gap-4 pt-6 border-t border-white/10">
