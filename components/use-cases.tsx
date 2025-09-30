@@ -40,10 +40,35 @@ interface Hero {
   contenidosextocuadro: string;
 }
 
+// ✅ Datos por defecto basados en tu JSON
+const defaultHero: Hero = {
+  titulo1: "Casos de Uso",
+  PrimerTitulo: "Transformando Industrias",
+  contenido:
+    "Nuestra plataforma IA está diseñada para enfrentar los desafíos únicos de varios sectores.",
+  tituloprimercuadro: "Minería",
+  contenidoprimercuadro:
+    "Transferencia de conocimiento entre ingenieros, operarios y contratistas de manera ágil. Reportes de sostebilidadautomatizados para auditores y entidades regulatorias",
+  titulosegundocuadro: " Manufactura e Ingeniería",
+  contenidosegundocuadro:
+    "Procedimientos operativos estándar (SOP) dinámicos y fáciles de seguir. Manuales de producto que se actualizan automáticamente. Documentación de mantenimiento predictivo para maquinaria",
+  titulotercercuadro: "Legal y Consultoría",
+  contenidotercercuadro:
+    "Documentos legales y compliance siempre en orden. Asistentes IA que ayudan a navegar cláusulas y regulaciones. Repositorios de conocimiento seguro para clientes y equipos.",
+  titulocuartocuadro: "Tecnología y Software",
+  contenidocuartocuadro:
+    "Documentación técnica para APIs y SDKs, actualizada en segundos. Guías interactivas con asistentes IA para desarrolladores. Colaboración ágil entre producto y soporte.",
+  tituloquintocuadro: "Retail y E-commerce",
+  contenidoquintocuadro:
+    "Documentación de productos actualizada al instante. Guías interactivas de autoservicio para clientes. Conocimiento compartido entre soporte, ventas y logística.",
+  titulosextocuadro: "Banca y Finanzas",
+  contenidosextocuadro:
+    "Manuales internos seguros con acceso basado en roles. Flujos automatizados para cumplir normativas (AML, GDPR, Basilea). Soporte a clientes con documentación conversacional en tiempo real.",
+};
+
 export default function UseCases() {
-  const [hero, setHero] = useState<Hero | null>(null);
+  const [hero, setHero] = useState<Hero>(defaultHero); // 👈 Arranca con los datos por defecto
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,9 +76,7 @@ export default function UseCases() {
         console.log("🔄 Llamando a Strapi...");
         const res = await fetch(
           "http://34.170.207.129:1337/api/cuarto-contenido",
-          {
-            cache: "no-store",
-          }
+          { cache: "no-store" }
         );
 
         if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
@@ -61,15 +84,14 @@ export default function UseCases() {
         const json = await res.json();
         console.log("📦 JSON recibido:", json);
 
-        // ✅ Adaptado a tu respuesta real
         if (json?.data) {
-          setHero(json.data);
+          setHero(json.data); // ✅ Usa datos de Strapi si llegan
         } else {
-          throw new Error("⚠️ Estructura inesperada en la API");
+          console.warn("⚠️ Estructura inesperada, usando fallback");
         }
-      } catch (err: any) {
-        console.error("❌ Error al traer data de Strapi:", err);
-        setError(err.message || "Error al cargar contenido");
+      } catch (err) {
+        console.error("❌ Error al traer data de Strapi, usando fallback:", err);
+        // 👈 Mantiene defaultHero
       } finally {
         setLoading(false);
       }
@@ -80,22 +102,6 @@ export default function UseCases() {
 
   if (loading) {
     return <p className="text-center py-20">⏳ Cargando contenido...</p>;
-  }
-
-  if (error) {
-    return (
-      <p className="text-center py-20 text-red-500">
-        ❌ No se pudo cargar el contenido: {error}
-      </p>
-    );
-  }
-
-  if (!hero) {
-    return (
-      <p className="text-center py-20 text-yellow-500">
-        ⚠️ No se encontró información para mostrar.
-      </p>
-    );
   }
 
   const useCases = [
@@ -114,7 +120,7 @@ export default function UseCases() {
     {
       icon: <FinanceIcon />,
       title: hero.titulotercercuadro,
-      description: hero.contenidotercercuadro, // ⚠️ corregido
+      description: hero.contenidotercercuadro,
       accentColor: "rgba(245, 158, 11, 0.5)",
     },
     {
