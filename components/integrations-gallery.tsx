@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 interface Hero {
   titulo1: string;
@@ -83,82 +84,82 @@ export default function IntegrationsGallery() {
     {
       id: "whatsapp",
       name: "WhatsApp Business",
-      icon: "💬",
+      icon: "/images/Logo-WHATSAPP.jpg",
       color: "#25D366",
-      description: "Plataforma de mensajería",
+      description: "Es una aplicación de mensajería instantánea que permite enviar y recibir mensajes, audios, videos y fotografía a través de un teléfono móvil.",
     },
     {
-      id: "telegram",
-      name: "Telegram",
-      icon: "✈️",
+      id: "salesforce",
+      name: "salesforce",
+      icon: "/images/Logo-SALESFORCE.jpg",
       color: "#0088CC",
-      description: "Mensajería segura",
+      description: "Es una plataforma CRM que permite a las empresas centralizar y automatizar la gestión de clientes en la nube.",
     },
     {
-      id: "make",
-      name: "Make.com",
-      icon: "🔧",
-      color: "#6366F1",
-      description: "Plataforma de automatización",
-    },
-    {
-      id: "calendly",
-      name: "Calendly",
-      icon: "📅",
+      id: "sap",
+      name: "SAP",
+      icon: "/images/Logo-SAP.jpg",
       color: "#006BFF",
-      description: "Herramienta de programación",
+      description: "Es un software de gestión empresarial basado en ERP que conecta y optimiza diferentes áreas de la organización.",
     },
     {
-      id: "huggingface",
-      name: "Hugging Face",
-      icon: "🤗",
+      id: "oracle",
+      name: "ORACLE",
+      icon: "/images/Logo-ORACLE.jpg",
+      color: "#006BFF",
+      description: "Es una compañía especializada en el desarrollo de soluciones de nube y locales.",
+    },
+    {
+      id: "bitrix24",
+      name: "Bitrix24",
+      icon: "/images/Logo-BITRIX.jpg",
       color: "#FF9D00",
-      description: "Hub de modelos ML",
+      description: "Es una plataforma integral de gestion empresarial que combina herramientas de marketing, automatizacion y colaboracion online.",
     },
     {
-      id: "slack",
-      name: "Slack",
-      icon: "💬",
+      id: "odoo",
+      name: "odoo",
+      icon: "/images/Logo-ODOO.jpg",
       color: "#4A154B",
-      description: "Colaboración en equipo",
+      description: "Es una plataforma de código abierto que ofrece una amplia gama de aplicaciones empresariales integradas, diseñadas para mejorar la productividad y eficiencia de las empresas",
     },
   ];
 
   const topLLMProviders = [
     {
+      id: "gemini",
+      name: "Gemini",
+      icon: "/images/Logo-GEMINI.jpg",
+      color: "#10A37F",
+      description: "Es un modelo de inteligencia artificial creado por Google que puede entender y generar textos, imágenes, audio y código",
+    },
+    {
+      id: "deepseek",
+      name: "DeepSeek",
+      icon: "/images/Logo-DEEPSEEK.jpg",
+      color: "#D97706",
+      description: "Es una plataforma avanzada de búsqueda y análisis que utiliza inteligencia artificial para ofrecer resultados precisos y sintetizar información compleja.",
+    },
+    {
       id: "openai",
       name: "OpenAI",
-      icon: "🤖",
-      color: "#10A37F",
-      description: "Modelos GPT",
+      icon: "/images/Logo-OPENAI.jpg",
+      color: "#F97316",
+      description: "Modelo de lenguaje avanzados que generan texto de calidad humana y resuelven problemas complejos",
     },
     {
       id: "anthropic",
-      name: "Anthropic",
-      icon: "🧠",
-      color: "#D97706",
-      description: "Modelos Claude",
-    },
-    {
-      id: "groq",
-      name: "Groq",
-      icon: "⚡",
-      color: "#F97316",
-      description: "Inferencia rápida",
-    },
-    {
-      id: "cerebras",
-      name: "Cerebras",
-      icon: "🔥",
+      name: "ANTHROPIC",
+      icon: "/images/Logo-ANTHROPIC.jpg",
       color: "#DC2626",
-      description: "Alto rendimiento",
+      description: "Se especializa en el desarrollo de sistemas de información y modelos de lenguaje, con una ética empresarial de uso responsable de la IA.",
     },
     {
       id: "fireworks",
       name: "Fireworks AI",
-      icon: "🎆",
+      icon: "/images/Logo-FIREWORKS.jpg",
       color: "#8B5CF6",
-      description: "Modelos optimizados",
+      description: "Modelos de IA de código abierto a velocidad vertiginosa, optimizados para tu caso de uso, escalados globalmente con Fireworks Al Cloud",
     },
   ];
 
@@ -174,27 +175,34 @@ export default function IntegrationsGallery() {
         <div className="flex items-center gap-4">
           <motion.div
             className="w-10 h-10 rounded-lg flex items-center justify-center text-xl relative overflow-hidden"
-            style={{ backgroundColor: `${item.color}20` }}
+            //color - comentado
+            // style={{ backgroundColor: `${item.color}20` }}
             transition={{ duration: 0.2 }}
           >
-            <span className="relative z-10">{item.icon}</span>
-            <motion.div
-              className="absolute inset-0 rounded-lg"
-              style={{ backgroundColor: item.color }}
-              initial={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
+            {/* 👇 Si es una ruta de imagen, usa <Image />, si no renderiza texto (emoji) */}
+          {typeof item.icon === "string" && item.icon.startsWith("/") ? (
+            <Image
+              src={item.icon}
+              alt={item.name}
+              fill
+              className="object-contain z-10"
             />
+          ) : (
+            <span className="relative z-10">{item.icon}</span>
+          )}
+
+          <motion.div
+            className="absolute inset-0 rounded-lg"
+            style={{ backgroundColor: item.color }}
+            initial={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          />
           </motion.div>
           <div>
             <div className="text-white font-medium text-sm">{item.name}</div>
-            <div className="text-gray-400 text-xs">{item.description}</div>
+            <div className="w-72 text-gray-400 text-xs">{item.description}</div>
           </div>
         </div>
-        <motion.div
-          transition={{ duration: 0.2 }}
-        >
-          <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-white transition-colors duration-300" />
-        </motion.div>
       </div>
     </motion.div>
   );
