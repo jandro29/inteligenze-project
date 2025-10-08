@@ -27,28 +27,68 @@ interface Hero {
   respuesta8: string;
 }
 
+const fallbackData: Hero = {
+  FAQ: "FAQ",
+  PrimerTitulo: "Preguntas Frecuentes",
+  contenido:
+    "Obtén respuestas a preguntas comunes sobre nuestra plataforma IA empresarial, implementación y soporte.",
+  pregunta1: "¿Qué tan segura es su plataforma IA para uso empresarial?",
+  respuesta1:
+    "Nuestra tecnología utiliza inteligencia artificial para completar cuestionarios ESG en segundos, extrayendo la información relevante de documentos como informes anuales, estados financieros o reportes de sostenibilidad (CSR).",
+  pregunta2: "¿Cómo automatiza Inteligenze los cuestionarios ESG?",
+  respuesta2:
+    "En Inteligenze creemos en la innovación continua. Por eso estamos desarrollando herramientas de IA especializadas para una amplia gama de casos de uso ESG, desde la gestión de datos hasta el análisis predictivo.",
+  pregunta3: "¿Qué más puede hacer Inteligenze?",
+  respuesta3:
+    "Inteligenze puede analizar datos cuantitativos y cualitativos relacionados con medio ambiente, gobernanza y responsabilidad social...",
+  pregunta4: "¿Qué tipo de datos ESG puede analizar Inteligenze?",
+  respuesta4:
+    "Sí. Gracias a nuestra API flexible y segura, Inteligenze puede integrarse fácilmente con sistemas internos...",
+  pregunta5: "¿Inteligenze puede integrarse con otras plataformas o sistemas internos?",
+  respuesta5:
+    "Sí. Inteligenze se adapta tanto a grandes corporaciones como a pymes en distintas etapas de madurez ESG...",
+  pregunta6: "¿Inteligenze es adecuada para cualquier tipo de empresa?",
+  respuesta6:
+    "Ofrecemos precios flexibles basados en uso, número de usuarios y requisitos de características...",
+  pregunta7: "¿Cómo aseguran la privacidad de datos y cumplimiento?",
+  respuesta7:
+    "Mantenemos estándares estrictos de privacidad de datos con cumplimiento GDPR, HIPAA y SOC 2...",
+  pregunta8: "¿Qué pasa con nuestros datos si decidimos discontinuar el servicio?",
+  respuesta8:
+    "Proporcionamos herramientas integrales de exportación de datos y asistencia de migración de soporte...",
+};
+
 export default function FAQSection() {
   const [hero, setHero] = useState<Hero | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("🔄 Conectando con Strapi...");
-        const res = await fetch("http://strapi.inteligenze.com/api/septimo-contenedor", {
+        setLoading(true);
+        setError(false);
+
+        console.log("🛰️ Obteniendo datos desde Strapi...");
+
+        const res = await fetch("https://strapi.inteligenze.com/api/septimo-contenedor", {
           cache: "no-store",
+          signal: AbortSignal.timeout(8000),
         });
 
-        if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
+        if (!res.ok) throw new Error(`HTTP error ${res.status}`);
 
         const json = await res.json();
-        if (json?.data) {
+
+        if (json.data) {
           setHero(json.data);
         } else {
-          throw new Error("Estructura de datos no válida");
+          throw new Error("Respuesta sin datos válidos");
         }
       } catch (err) {
-        console.error("❌ Error obteniendo datos de Strapi:", err);
+        console.error("❌ Error al conectar con Strapi:", err);
+        setError(true);
+        setHero(fallbackData);
       } finally {
         setLoading(false);
       }
@@ -80,136 +120,82 @@ export default function FAQSection() {
     );
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.2 },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-  };
-
   if (loading) {
     return (
-      <section className="py-20 bg-gradient-to-b from-background to-muted/30">
-        <div className="container text-center">
-          <div className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground mb-2">
-            <HelpCircle className="h-4 w-4" />
-            Conectando con Strapi...
-          </div>
-          <h2 className="text-3xl font-bold">Cargando Preguntas Frecuentes...</h2>
-        </div>
+      <section className="py-20 text-center">
+        <h2 className="text-3xl font-bold">Cargando Preguntas...</h2>
+        <p className="text-muted-foreground">Conectando con Strapi...</p>
       </section>
     );
   }
 
-  if (!hero) {
+  if (error) {
     return (
       <section className="py-20 text-center">
+        <h2 className="text-3xl font-bold text-red-500">
+          No se pudieron cargar las preguntas.
+        </h2>
         <p className="text-muted-foreground">
-          No se pudieron cargar las preguntas. Inténtalo más tarde.
+          Inténtalo más tarde o revisa la conexión con Strapi.
         </p>
       </section>
     );
   }
 
   return (
-    <section className="py-20 bg-gradient-to-b from-background to-muted/30 dark:from-background dark:to-muted/10">
+    <section className="py-20 bg-gradient-to-b from-background to-muted/30">
       <div className="container px-4 md:px-6">
         <motion.div
-          className="flex flex-col items-center text-center mb-12"
+          className="flex flex-col items-center justify-center space-y-4 text-center mb-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground mb-2">
-            <HelpCircle className="h-4 w-4" />
-            {hero.FAQ}
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground mb-2">
+              <HelpCircle className="h-4 w-4" />
+              {hero?.FAQ || "Preguntas Frecuentes"}
+            </div>
+            <h2 className="text-3xl font-bold">
+              {hero?.PrimerTitulo || "Preguntas Frecuentes"}
+            </h2>
+            <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
+              {hero?.contenido ||
+                "Encuentra respuestas a las preguntas más comunes"}
+            </p>
           </div>
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-            {hero.PrimerTitulo}
-          </h2>
-          <p className="max-w-[700px] text-muted-foreground md:text-xl mt-2">
-            {hero.contenido}
-          </p>
         </motion.div>
 
-        <motion.div
-          className="max-w-4xl mx-auto space-y-4"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          {faqs.map((faq, index) => (
-            <motion.div key={index} variants={itemVariants}>
-              <Card className="overflow-hidden bg-background/60 backdrop-blur-sm border transition-all duration-300 hover:shadow-lg">
-                <motion.button
-                  className="w-full text-left"
-                  onClick={() => toggleItem(index)}
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                >
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold pr-4">
-                        {faq.question}
-                      </h3>
-                      <motion.div
-                        animate={{
-                          rotate: openItems.includes(index) ? 180 : 0,
-                        }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <ChevronDown className="h-5 w-5 text-muted-foreground" />
-                      </motion.div>
-                    </div>
-                  </CardContent>
-                </motion.button>
-
-                <AnimatePresence>
-                  {openItems.includes(index) && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <CardContent className="px-6 pb-6 pt-0 border-t">
-                        <p className="text-muted-foreground leading-relaxed">
-                          {faq.answer}
-                        </p>
-                      </CardContent>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </Card>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        <motion.div
-          className="mt-16 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-        >
-          <p className="text-sm text-muted-foreground">
-            ¿Aún tienes preguntas?{" "}
-            <a
-              href="#contact"
-              className="text-primary hover:underline font-medium"
-            >
-              Contacta a nuestro equipo de soporte
-            </a>
-          </p>
-        </motion.div>
+        {faqs.map((faq, index) => (
+          <Card key={index} className="mb-4">
+            <CardContent>
+              <button
+                className="flex justify-between items-center w-full"
+                onClick={() => toggleItem(index)}
+              >
+                <h3 className="text-lg font-semibold">{faq.question}</h3>
+                <ChevronDown
+                  className={`transition-transform ${
+                    openItems.includes(index) ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+              <AnimatePresence>
+                {openItems.includes(index) && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="mt-2"
+                  >
+                    <p className="text-muted-foreground">{faq.answer}</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </CardContent>
+          </Card>
+        ))}
       </div>
     </section>
   );
