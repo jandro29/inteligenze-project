@@ -10,17 +10,17 @@ export const revalidate = 0
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Enterprise AI Platform | Secure AI Solutions for Business & Government",
+  title: "Genera tus Reportes ESG con Inteligencia Artificial | Inteligenze: Datos Precisos, Sostenibilidad Inteligente",
   description:
-    "Enterprise-grade AI platform with LLM conversations, customizable agents, secure knowledge base, and MCP server support for businesses and government agencies.",
+    "Inteligenze automatiza la recolección y análisis de datos ESG. Nuestra plataforma de IA genera reportes instantáneos y confiables para impulsar la transparencia y el rendimiento sostenible de tu empresa.",
   keywords: "enterprise AI, secure AI, government AI solutions, LLM, knowledge base, AI agents, MCP server",
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://your-domain.com",
-    title: "Enterprise AI Platform | Secure AI Solutions",
+    url: "https://www.inteligenze.com/",
+    title: "Genera tus Reportes ESG con Inteligencia Artificial | Inteligenze: Datos Precisos, Sostenibilidad Inteligente",
     description:
-      "Enterprise-grade AI platform with advanced security, customization, and control for businesses and government agencies.",
+      "Inteligenze automatiza la recolección y análisis de datos ESG. Nuestra plataforma de IA genera reportes instantáneos y confiables para impulsar la transparencia y el rendimiento sostenible de tu empresa.",
     siteName: "Enterprise AI Platform",
     images: [
       {

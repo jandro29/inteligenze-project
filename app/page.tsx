@@ -14,7 +14,6 @@ import StructuredData from "@/components/structured-data";
 import IntegrationsGallery from "@/components/integrations-gallery";
 import FAQSection from "@/components/faq-section";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
-import Head from "next/head";
 
 export const dynamic = "force-dynamic";
 
@@ -71,20 +70,6 @@ export default async function Home() {
   ]);
   return (
     <>
-      <Head>
-        {/* Open Graph */}
-        <meta property="og:title" content="Genera tus Reportes ESG con Inteligencia Artificial | Inteligenze: Datos Precisos, Sostenibilidad Inteligente" />
-        <meta
-          property="og:description"
-          content="Inteligenze automatiza la recolección y análisis de datos ESG. Nuestra plataforma de IA genera reportes instantáneos y confiables para impulsar la transparencia y el rendimiento sostenible de tu empresa."
-        />
-        <meta
-          property="og:image"
-          content="https://midominio.com/imagenes/preview.jpg"
-        />
-        <meta property="og:url" content="https://midominio.com" />
-        <meta property="og:type" content="website" />
-      </Head>
 
       <StructuredData />
       <div className="flex min-h-screen flex-col">
