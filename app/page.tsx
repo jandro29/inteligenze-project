@@ -14,6 +14,7 @@ import StructuredData from "@/components/structured-data";
 import IntegrationsGallery from "@/components/integrations-gallery";
 import FAQSection from "@/components/faq-section";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import Head from "next/head";
 
 export const dynamic = "force-dynamic";
 
@@ -42,13 +43,13 @@ interface ThirtSection {
 }
 
 interface ninesection {
-  PrimerTitulo:string;
-  contenido:string;
-  beneficio1:string;
-  beneficio2:string;
-  beneficio3:string;
-  beneficio4:string;
-  ultimoTexto:string;
+  PrimerTitulo: string;
+  contenido: string;
+  beneficio1: string;
+  beneficio2: string;
+  beneficio3: string;
+  beneficio4: string;
+  ultimoTexto: string;
 }
 
 async function fetchMultiple(endpoints: string[]) {
@@ -70,6 +71,21 @@ export default async function Home() {
   ]);
   return (
     <>
+      <Head>
+        {/* Open Graph */}
+        <meta property="og:title" content="Genera tus Reportes ESG con Inteligencia Artificial | Inteligenze: Datos Precisos, Sostenibilidad Inteligente" />
+        <meta
+          property="og:description"
+          content="Inteligenze automatiza la recolección y análisis de datos ESG. Nuestra plataforma de IA genera reportes instantáneos y confiables para impulsar la transparencia y el rendimiento sostenible de tu empresa."
+        />
+        <meta
+          property="og:image"
+          content="https://midominio.com/imagenes/preview.jpg"
+        />
+        <meta property="og:url" content="https://midominio.com" />
+        <meta property="og:type" content="website" />
+      </Head>
+
       <StructuredData />
       <div className="flex min-h-screen flex-col">
         <Navbar />
@@ -97,14 +113,14 @@ export default async function Home() {
 
               <div className="flex flex-wrap justify-center gap-3 mt-16">
                 <a href="#contact" className="no-underline">
-                <Button className="flex items-center gap-3 px-5 py-6 h-[60px] bg-[#1a1d21] hover:bg-[#2a2d31] text-white rounded-xl border-0 dark:bg-primary dark:hover:bg-primary/90 dark:shadow-[0_0_15px_rgba(36,101,237,0.5)] relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/30 to-primary/0 dark:opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-x-[-100%] group-hover:translate-x-[100%]"></div>
-                  <div className="flex flex-col items-start relative z-10">
-                    <span className="text-[15px] font-medium">
-                      Contactanos
-                    </span>
-                  </div>
-                </Button>
+                  <Button className="flex items-center gap-3 px-5 py-6 h-[60px] bg-[#1a1d21] hover:bg-[#2a2d31] text-white rounded-xl border-0 dark:bg-primary dark:hover:bg-primary/90 dark:shadow-[0_0_15px_rgba(36,101,237,0.5)] relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/30 to-primary/0 dark:opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-x-[-100%] group-hover:translate-x-[100%]"></div>
+                    <div className="flex flex-col items-start relative z-10">
+                      <span className="text-[15px] font-medium">
+                        Contactanos
+                      </span>
+                    </div>
+                  </Button>
                 </a>
                 {/* <Button className="px-5 py-6 h-[60px] rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-[15px] font-medium text-foreground">
                   Saber Más
@@ -240,7 +256,7 @@ export default async function Home() {
             </div>
           </div>
         </section>
-       {/* <Footer /> */}
+        {/* <Footer /> */}
       </div>
     </>
   );
