@@ -1,24 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState, useEffect } from "react";
-
-// Declaración de tipo para HubSpot
-declare global {
-  interface Window {
-    hbspt?: {
-      forms: {
-        create: (options: {
-          region: string;
-          portalId: string;
-          formId: string;
-          target: string;
-          onFormSubmitted?: () => void;
-        }) => void;
-      };
-    };
-  }
-}
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -31,43 +14,6 @@ import { CheckCircle2 } from "lucide-react";
 
 export default function ContactForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Cargar el script de HubSpot
-    const script = document.createElement("script");
-    script.src = "https://js.hsforms.net/forms/embed/46621915.js";
-    script.defer = true;
-    
-    script.onload = () => {
-      // Cuando el script se carga, crear el formulario
-      if (window.hbspt?.forms) {
-        window.hbspt.forms.create({
-          region: "na1",
-          portalId: "46621915",
-          formId: "1ceca991-5d13-49dd-9e0b-7f3d09ae7cee",
-          target: "#hubspot-form-container",
-          onFormSubmitted: () => {
-            // Callback cuando el formulario se envía exitosamente
-            setIsSubmitted(true);
-          }
-        });
-        setIsLoading(false);
-      }
-    };
-
-    document.body.appendChild(script);
-
-    // Cleanup: remover el script cuando el componente se desmonte
-    return () => {
-      const existingScript = document.querySelector(
-        'script[src="https://js.hsforms.net/forms/embed/46621915.js"]'
-      );
-      if (existingScript) {
-        document.body.removeChild(existingScript);
-      }
-    };
-  }, []);
 
   if (isSubmitted) {
     return (
@@ -97,12 +43,14 @@ export default function ContactForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {isLoading && (
-          <div className="flex justify-center items-center min-h-[300px]">
-            <div className="text-muted-foreground">Cargando formulario...</div>
-          </div>
-        )}
-        <div id="hubspot-form-container"></div>
+        <iframe
+          title="Formulario de Contacto HubSpot"
+          src="https://share.hsforms.com/1HM6pke0dSdieDn89CnrnOAfd8mc"
+          width="100%"
+          height="800"
+          frameBorder="0"
+          style={{ border: 'none' }}
+        />
       </CardContent>
     </Card>
   );
