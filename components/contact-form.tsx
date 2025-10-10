@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,6 +14,27 @@ import { CheckCircle2 } from "lucide-react";
 
 export default function ContactForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  useEffect(() => {
+    // Cargar el script de HubSpot
+    const script = document.createElement("script");
+    script.src = "https://js.hsforms.net/forms/embed/46621915.js";
+    script.defer = true;
+    script.charset = "utf-8";
+    script.type = "text/javascript";
+    
+    document.body.appendChild(script);
+
+    // Cleanup: remover el script cuando el componente se desmonte
+    return () => {
+      const existingScript = document.querySelector(
+        'script[src="https://js.hsforms.net/forms/embed/46621915.js"]'
+      );
+      if (existingScript) {
+        document.body.removeChild(existingScript);
+      }
+    };
+  }, []);
 
   if (isSubmitted) {
     return (
@@ -43,13 +64,11 @@ export default function ContactForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <iframe
-          title="Formulario de Contacto HubSpot"
-          src="https://share.hsforms.com/1HM6pke0dSdieDn89CnrnOAfd8mc"
-          width="100%"
-          height="800"
-          frameBorder="0"
-          style={{ border: 'none' }}
+        <div
+          className="hs-form-frame"
+          data-region="na1"
+          data-form-id="1ceca991-5d13-49dd-9e0b-7f3d09ae7cee"
+          data-portal-id="46621915"
         />
       </CardContent>
     </Card>
