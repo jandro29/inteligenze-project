@@ -1,8 +1,7 @@
 "use client";
 
 import type React from "react";
-
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -23,15 +22,50 @@ import {
 import { Label } from "@/components/ui/label";
 import { CheckCircle2 } from "lucide-react";
 
+declare global {
+  interface Window {
+    hbspt: any;
+  }
+}
+
 export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const formRef = useRef(null);
+
+  // 👇 --- Integración correcta de HubSpot ---
+  useEffect(() => {
+    const existingScript = document.querySelector(
+      'script[src="https://js.hsforms.net/forms/embed/46621915.js"]'
+    );
+
+    const createForm = () => {
+      if (window.hbspt) {
+        window.hbspt.forms.create({
+          region: "na1",
+          portalId: "46621915",
+          formId: "1ceca991-5d13-49dd-9e0b-7f3d09ae7cee",
+          target: "#hubspotForm",
+        });
+      }
+    };
+
+    if (!existingScript) {
+      const script = document.createElement("script");
+      script.src = "https://js.hsforms.net/forms/embed/46621915.js";
+      script.defer = true;
+      script.onload = createForm;
+      document.body.appendChild(script);
+    } else {
+      createForm();
+    }
+  }, []);
+  // 👆 --- Fin integración HubSpot ---
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simular envío de formulario
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
@@ -66,16 +100,8 @@ export default function ContactForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <script
-          src="https://js.hsforms.net/forms/embed/46621915.js"
-          defer
-        ></script>
-        <div
-          className="hs-form-frame"
-          data-region="na1"
-          data-form-id="1ceca991-5d13-49dd-9e0b-7f3d09ae7cee"
-          data-portal-id="46621915"
-        ></div>
+        {/* ✅ Aquí se montará dinámicamente el formulario de HubSpot */}
+        <div id="hubspotForm" ref={formRef}></div>
       </CardContent>
     </Card>
   );
